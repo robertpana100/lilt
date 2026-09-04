@@ -48,14 +48,12 @@ export function MusicEffectSlider({
 
 export function MusicEffectBlock({
   name,
-  description,
   enabled,
   bypassed,
   onEnabledChange,
   children,
 }: {
   name: string;
-  description: string;
   enabled: boolean;
   bypassed: boolean;
   onEnabledChange: (enabled: boolean) => void;
@@ -66,7 +64,6 @@ export function MusicEffectBlock({
       <SwitchRow
         ariaLabel={`Enable music ${name}`}
         label={<span className="text-xs font-medium">{name}</span>}
-        hint={description}
         checked={enabled}
         disabled={bypassed}
         onCheckedChange={onEnabledChange}

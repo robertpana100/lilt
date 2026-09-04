@@ -16,23 +16,16 @@ export function NowPlayingCard({ root, runtime, enabled, volume }: NowPlayingCar
   return (
     <section className="player-card" aria-label="Music player">
       <div className="player-topline">
-        <span className="eyebrow">THE LISTENING ROOM</span>
+        <span className="eyebrow">Now playing</span>
         <span className="player-status" data-playing={sounding}>
           <span />
-          {sounding
-            ? musicStatusLabel(runtime.status)
-            : runtime.status === "error"
-              ? "Audio unavailable"
-              : "Ready when you are"}
+          {sounding ? musicStatusLabel(runtime.status) : runtime.status === "error" ? "Audio unavailable" : "Paused"}
         </span>
       </div>
       <div className="player-transport">
         <MusicTransport enabled={enabled} volume={volume} />
       </div>
       <div className="record-sleeve">
-        <div className="sleeve-caption">
-          LILT SESSIONS <span>GENERATED WITH CARE</span>
-        </div>
         <div className="cover-frame">
           <MusicCoverArt subject={runtime} size={244} label={`Cover of ${runtime.name}`} />
         </div>

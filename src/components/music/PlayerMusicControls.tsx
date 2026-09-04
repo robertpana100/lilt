@@ -33,7 +33,7 @@ export function PlayerMusicControls() {
           <RepertoirePanel />
         </TabsContent>
         <TabsContent value="sound-desk">
-          <Suspense fallback={<p role="status">Opening the sound desk…</p>}>
+          <Suspense fallback={<p role="status">Loading…</p>}>
             <SoundDesk />
           </Suspense>
         </TabsContent>

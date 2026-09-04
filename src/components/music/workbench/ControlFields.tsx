@@ -38,14 +38,12 @@ export function NumberField({
  */
 export function SwitchRow({
   label,
-  hint,
   checked,
   disabled,
   ariaLabel,
   onCheckedChange,
 }: {
   label: ReactNode;
-  hint?: ReactNode;
   checked: boolean;
   disabled?: boolean;
   ariaLabel: string;
@@ -53,10 +51,7 @@ export function SwitchRow({
 }) {
   return (
     <div className="flex min-h-11 items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm">
-      <span className="min-w-0">
-        {label}
-        {hint && <span className="block text-2xs text-muted-foreground">{hint}</span>}
-      </span>
+      <span className="min-w-0">{label}</span>
       <Switch aria-label={ariaLabel} checked={checked} disabled={disabled} onCheckedChange={onCheckedChange} />
     </div>
   );

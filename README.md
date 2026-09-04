@@ -1,7 +1,5 @@
 # Lilt
 
-A little room for endless music.
-
 Lilt is a standalone procedural music generator extracted from The City Remembers.
 It composes and synthesizes original lute duets locally. No game runtime, sample
 libraries, accounts, or remote generation services are needed.
@@ -36,7 +34,7 @@ visible notifications, and the responsive studio layout.
   variations, performances, and favourite playlists.
 - **Sound desk:** seed and form controls, per-lute mixing, harmony and rhythm,
   instrument/chord audition with a live spectrum, six effects, and seeking.
-  Choose **Take the lead** to make manual edits. Settings in the sound desk last
+  Choose **Enable manual controls** to make manual edits. Settings in the sound desk last
   for the session; favouriting a played take preserves its replay recipe.
 - **Your library:** the latest 25 played takes and up to 100 favourites, searchable
   by title and musical details. MIDI downloads contain note data, not rendered audio.

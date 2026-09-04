@@ -23,13 +23,13 @@ export function MusicEffectsSection() {
       <SwitchRow
         ariaLabel="Bypass all music effects"
         label={<span className="text-xs font-medium">Bypass rack</span>}
-        hint="Hear the procedural lute with every effect removed."
+
         checked={bypassed}
         onCheckedChange={(enabled) => controller.setEffectsBypassed(enabled)}
       />
       <MusicEffectBlock
         name="Tone"
-        description="Low and high shelving before the rest of the rack."
+
         enabled={sounding.tone.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("tone", { enabled })}
@@ -57,7 +57,7 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Saturation"
-        description="Parallel soft clipping for body and perceived loudness."
+
         enabled={sounding.saturation.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("saturation", { enabled })}
@@ -77,7 +77,7 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Chorus"
-        description="A lightly modulated second path for course width."
+
         enabled={sounding.chorus.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("chorus", { enabled })}
@@ -111,7 +111,7 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Tremolo"
-        description="Periodic amplitude movement after chorus."
+
         enabled={sounding.tremolo.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("tremolo", { enabled })}
@@ -135,7 +135,7 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Echo"
-        description="Feedback delay with bounded regeneration."
+
         enabled={sounding.echo.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("echo", { enabled })}
@@ -167,7 +167,7 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Reverb"
-        description="Deterministic room impulse at the end of the rack."
+
         enabled={sounding.reverb.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("reverb", { enabled })}

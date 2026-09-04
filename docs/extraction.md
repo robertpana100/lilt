@@ -63,7 +63,7 @@ and cleanup, preference isolation, and real composition/mute/effect commands.
 
 Browser checks covered initial playback, advancing progress, recording history,
 favouriting and replay, MIDI export feedback, desktop and 390 px mobile layouts,
-the scrollable help dialog, and production playback plus lazy Sound desk loading.
+production playback, and lazy Sound desk loading.
 The production console contained no warnings or errors during those checks.
 Hardware media behavior is covered through the adapter tests; no physical
 keyboard media-key test was performed.

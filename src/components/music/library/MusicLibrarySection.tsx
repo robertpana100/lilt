@@ -1,16 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { IconArrowsShuffle, IconListNumbers, IconSearch, IconX } from "@tabler/icons-react";
 import { setFavoritePlaybackOrder } from "@/audio/playback/favorites";
-import {
-  MAX_MUSIC_FAVORITES,
-  MAX_MUSIC_HISTORY,
-  searchMusicTracks,
-  useMusicLibrary,
-  type MusicLibraryTrack,
-} from "@/audio/musicLibrary";
+import { searchMusicTracks, useMusicLibrary, type MusicLibraryTrack } from "@/audio/musicLibrary";
 import { useMusicSettings } from "@/audio/musicSettings";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -38,10 +32,6 @@ export function MusicLibrarySection() {
     <Card>
       <CardHeader>
         <CardTitle>Music library</CardTitle>
-        <CardDescription className="text-xs">
-          The latest {MAX_MUSIC_HISTORY} songs and up to {MAX_MUSIC_FAVORITES} favourites are saved on this device.
-          Search, replay, or export MIDI note data.
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <InputGroup>
@@ -51,7 +41,7 @@ export function MusicLibrarySection() {
           <InputGroupInput
             type="search"
             aria-label="Search music library"
-            placeholder="Search title, atmosphere, form, or tempo…"
+            placeholder="Search"
             value={query}
             onChange={(event) => setQuery(event.currentTarget.value)}
           />

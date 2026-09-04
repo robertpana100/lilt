@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "A little room for endless music. Procedural composition and instrument synthesis, on your device.",
   "packageManager": "npm@11.19.0",
   "engines": {
     "node": ">=22.18.0"

@@ -18,7 +18,7 @@ describe("sound desk", () => {
   test("requires taking manual direction before editing an automatic or favourite programme", async () => {
     await renderDesk();
     expect(screen.queryByLabelText("Master seed")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "Take the lead" }));
+    fireEvent.click(screen.getByRole("button", { name: "Enable manual controls" }));
     expect(getMusicSettings().controlMode).toBe("override");
     expect(screen.getByLabelText("Master seed")).toBeTruthy();
   });

@@ -39,9 +39,6 @@ export function AuditionPanel() {
       <div role="group" aria-label="Exact chord audition" className="space-y-3 rounded-lg border p-3">
         <div>
           <p className="text-xs font-medium">Exact chord audition</p>
-          <p className="text-2xs text-muted-foreground">
-            Uses the current {root.mode} mode, {music.chords.strumMs} ms strum, and effects rack.
-          </p>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
@@ -114,7 +111,6 @@ export function AuditionPanel() {
           <div key={voice.id} className="flex items-center gap-1.5 p-2">
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-medium">{voice.name}</p>
-              <p className="text-2xs text-muted-foreground">{voice.description}</p>
             </div>
             <Button
               size="sm"

@@ -54,7 +54,6 @@ export function MusicCompositionControls({ config, root, locked }: MusicComposit
             ))}
           </SelectContent>
         </Select>
-        <p className="text-2xs leading-5 text-muted-foreground">{root.description}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -84,7 +83,6 @@ export function MusicCompositionControls({ config, root, locked }: MusicComposit
       <div className="flex min-h-11 items-center justify-between gap-3 rounded-lg border px-3 py-2">
         <div>
           <p className="text-xs font-medium">Endless repertoire</p>
-          <p className="text-2xs text-muted-foreground">Begin another named song after a short pause.</p>
         </div>
         <Switch
           aria-label="Endless music repertoire"

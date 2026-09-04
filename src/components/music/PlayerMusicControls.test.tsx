@@ -28,13 +28,11 @@ describe("Lilt studio", () => {
   test("locks composition until playback and manual direction are enabled", async () => {
     await renderStudio();
     expect((screen.getByRole("combobox", { name: "Music theme" }) as HTMLButtonElement).disabled).toBe(true);
-    expect(screen.getByText("Play music to use the composition controls.")).toBeTruthy();
     act(() => {
       setMusicEnabled(true);
       setMusicControlMode("override");
     });
     expect((screen.getByRole("combobox", { name: "Music theme" }) as HTMLButtonElement).disabled).toBe(false);
-    expect(screen.queryByText("Play music to use the composition controls.")).toBeNull();
   });
   test("opens the library and persists the system-media preference", async () => {
     await renderStudio();

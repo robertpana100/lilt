@@ -41,8 +41,6 @@ export interface MusicRoot {
   id: string;
   name: string;
   theme: string;
-  description: string;
-  historicalBasis: string;
   mode: MusicMode;
   meter: MusicMeter;
   tempo: { min: number; default: number; max: number };

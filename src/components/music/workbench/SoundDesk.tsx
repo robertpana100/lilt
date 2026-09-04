@@ -11,21 +11,15 @@ export default function SoundDesk() {
   const settings = useMusicSettings();
   return (
     <section aria-labelledby="sound-desk-title">
-      <div className="panel-heading">
-        <p className="eyebrow">02 / MAKE IT YOURS</p>
-        <h2 id="sound-desk-title">A closer listen.</h2>
-        <p>Shape the score, find your instrument, and dial in the room.</p>
-      </div>
+      <h2 id="sound-desk-title" className="sr-only">
+        Sound desk
+      </h2>
       {settings.controlMode !== "override" ? (
         <div className="manual-invitation">
-          <p>Take the lead to edit the score. You can return to automatic listening in Repertoire.</p>
-          <Button onClick={() => setMusicDirection("override")}>Take the lead</Button>
+          <Button onClick={() => setMusicDirection("override")}>Enable manual controls</Button>
         </div>
       ) : (
         <>
-          <p className="helper-note mb-5">
-            These edits last for this session. Favourite a played take to keep its exact recipe.
-          </p>
           <Tabs defaultValue="score">
             <TabsList aria-label="Sound desk controls" className="sound-desk-tabs">
               <TabsTrigger value="score">Score</TabsTrigger>

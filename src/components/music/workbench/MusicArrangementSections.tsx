@@ -17,14 +17,14 @@ export function MusicArrangementSections() {
         <SwitchRow
           ariaLabel="Enable lute strings"
           label={<span className="text-xs font-medium">Strings</span>}
-          hint="Mute or hear the lute's melodic string voice independently."
+
           checked={!session.mutedParts.strings}
           onCheckedChange={(enabled) => controller.setPartMuted("strings", !enabled)}
         />
         <SwitchRow
           ariaLabel="Enable rhythm lute"
           label={<span className="text-xs font-medium">Rhythm lute</span>}
-          hint="Mute or hear the second lute's chord accompaniment independently."
+
           checked={!session.mutedParts.rhythm}
           onCheckedChange={(enabled) => controller.setPartMuted("rhythm", !enabled)}
         />
@@ -78,10 +78,6 @@ export function MusicArrangementSections() {
             onChange={(strumMs) => controller.setChords({ strumMs })}
           />
         </div>
-        <p className="text-2xs leading-4 text-muted-foreground">
-          Zero amount removes chord voicings from the lead. Other settings keep its harmony inside the lead lute's
-          non-overlapping string part.
-        </p>
       </ControlSection>
       <ControlSection
         id="rhythm-lute"
@@ -134,10 +130,6 @@ export function MusicArrangementSections() {
             onChange={(strumMs) => controller.setRhythmLute({ strumMs })}
           />
         </div>
-        <p className="text-2xs leading-4 text-muted-foreground">
-          Every piece uses a second lute. It establishes modal harmony with mostly triadic bar-level strums beneath the
-          lead; density controls how often it reinforces the pulse.
-        </p>
       </ControlSection>
     </>
   );

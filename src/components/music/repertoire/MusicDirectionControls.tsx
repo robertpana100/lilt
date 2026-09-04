@@ -3,16 +3,10 @@ import type { MusicSettings } from "@/audio/musicSettings";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const MUSIC_DIRECTION_ITEMS = {
-  auto: "Play everything",
-  override: "Shape the music",
-  favorites: "Play favourites",
+  auto: "Automatic",
+  override: "Manual",
+  favorites: "Favourites",
 } as const;
-
-const DIRECTION_NOTES: Readonly<Record<MusicSettings["controlMode"], string>> = {
-  auto: "The whole repertoire plays; every new piece moves to another theme.",
-  override: "Theme and composition stay as you set them until you hand direction back.",
-  favorites: "Saved favourites direct the repertoire; composition stays locked.",
-};
 
 interface MusicDirectionControlsProps {
   settings: MusicSettings;
@@ -35,14 +29,13 @@ export function MusicDirectionControls({ settings, favoriteCount }: MusicDirecti
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="auto">Play everything</SelectItem>
-          <SelectItem value="override">Shape the music</SelectItem>
+          <SelectItem value="auto">Automatic</SelectItem>
+          <SelectItem value="override">Manual</SelectItem>
           <SelectItem value="favorites" disabled={favoriteCount === 0}>
-            Play favourites
+            Favourites
           </SelectItem>
         </SelectContent>
       </Select>
-      <p className="text-2xs text-muted-foreground">{DIRECTION_NOTES[settings.controlMode]}</p>
     </div>
   );
 }

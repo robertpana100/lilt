@@ -18,18 +18,16 @@ export const PHRASE_DEGREES = [0, 3, 7, 10, 12, 10, 7, 0] as const;
 export const AUDITION_CHORD_VOICINGS: ReadonlyArray<{
   id: AuditionChordVoicing;
   name: string;
-  description: string;
 }> = [
-  { id: "single", name: "Single", description: "root course only" },
-  { id: "fifth-dyad", name: "Fifth dyad", description: "root and fifth" },
-  { id: "open-fifth", name: "Open fifth", description: "root, fifth, and octave" },
-  { id: "modal-triad", name: "Modal triad", description: "root, modal third, and fifth" },
+  { id: "single", name: "Single" },
+  { id: "fifth-dyad", name: "Fifth dyad" },
+  { id: "open-fifth", name: "Open fifth" },
+  { id: "modal-triad", name: "Modal triad" },
 ];
 
 export interface AuditionVoice {
   id: LuteStyleId;
   name: string;
-  description: string;
   style: LuteStyleId;
   pitch: number;
 }
@@ -37,7 +35,6 @@ export interface AuditionVoice {
 export const AUDITION_VOICES: readonly AuditionVoice[] = LUTE_STYLES.map((style) => ({
   id: style.id,
   name: style.name,
-  description: style.description,
   style: style.id,
   pitch: style.id === "gittern" ? 62 : 57,
 }));

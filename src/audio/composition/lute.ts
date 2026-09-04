@@ -7,17 +7,14 @@ export const LUTE_STYLES = [
   {
     id: "renaissance-lute",
     name: "Renaissance lute",
-    description: "paired gut courses, a rounded attack, and a small pear-shaped body",
   },
   {
     id: "gittern",
     name: "Gittern",
-    description: "a compact medieval body with a brighter, quicker-speaking string",
   },
   {
     id: "oud",
     name: "Oud",
-    description: "close-paired courses, a dark body, and a softer fretless attack",
   },
 ] as const;
 

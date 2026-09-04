@@ -51,8 +51,6 @@ export function MusicPieceSections() {
             <Badge variant="outline">{root.meter}</Badge>
             <Badge variant="outline">{runtime.status}</Badge>
           </div>
-          <p className="mt-2 text-xs leading-5">{root.description}</p>
-          <p className="mt-1 text-2xs leading-4 text-muted-foreground">{root.historicalBasis}</p>
         </div>
       </ControlSection>
 
