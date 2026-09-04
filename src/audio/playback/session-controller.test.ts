@@ -1,6 +1,7 @@
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { generateMusicPiece } from "../composition/generator";
 import { musicPieceLineup } from "../composition/lineup";
+import { getMusicRoot } from "../composition/roots";
 import { TavernMusicEngine } from "./engine";
 import { MusicSession } from "./session-controller";
 import { createInitialMusicSessionState } from "./session-state";
@@ -50,6 +51,49 @@ describe("music debug controller", () => {
     session.newPerformance();
     expect(session.getState()).toMatchObject({ masterSeed: 1234, variationIndex: 1, performanceIndex: 1 });
   });
+
+  test.each(["auto", "override"] as const)(
+    "randomizes the whole composition in %s mode without starting audio",
+    (mode) => {
+      const initial = {
+        ...createInitialMusicSessionState({ pick: () => 0, randomSeed: () => 1234 }),
+        pieceIndex: 8,
+        variationIndex: 2,
+        performanceIndex: 3,
+        formOverride: "strophic" as const,
+        tonicOverride: 48,
+        autoAdvance: false,
+      };
+      const randomSeed = vi.fn().mockReturnValueOnce(9001).mockReturnValueOnce(872635);
+      playback.dispose();
+      playback = new TavernMusicEngine({ initialConfig: initial, createAudioContext: () => null });
+      session = new MusicSession(playback, initial, { getControlMode: () => mode, pick: () => 0, randomSeed });
+      playback.getRuntimeSnapshot();
+
+      for (const seed of [9001, 872635]) {
+        const previousRoot = session.getState().rootId;
+        session.randomize();
+        const state = session.getState();
+        expect(state).toMatchObject({
+          masterSeed: seed,
+          pieceIndex: 0,
+          variationIndex: 0,
+          performanceIndex: 0,
+          formOverride: null,
+          tonicOverride: null,
+          autoAdvance: false,
+          effects: initial.effects,
+        });
+        expect(state.rootId).not.toBe(previousRoot);
+        expect(state.bpm).toBe(getMusicRoot(state.rootId).tempo.default);
+        expect(playback.getRuntimeSnapshot()).toMatchObject({
+          status: "stopped",
+          piece: generateMusicPiece(state),
+        });
+      }
+      expect(randomSeed).toHaveBeenCalledTimes(2);
+    },
+  );
 
   test("changing roots resets composition locks", () => {
     session.setRoot("road");

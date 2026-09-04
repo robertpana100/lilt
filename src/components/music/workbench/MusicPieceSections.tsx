@@ -50,9 +50,6 @@ export function MusicPieceSections() {
         <button type="button" onClick={() => controller.newComposition()}>
           New composition
         </button>
-        <button type="button" onClick={() => controller.randomize()}>
-          Random atmosphere
-        </button>
       </div>
     </section>
   );

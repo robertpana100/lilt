@@ -1,10 +1,9 @@
 import type { MusicChordConfig } from "../composition/chord-config";
-import { pickMusicValue } from "../composition/random";
-import { MUSIC_ROOTS, type MusicPart, type MusicPieceForm, type MusicRootId } from "../composition/roots";
+import type { MusicPart, MusicPieceForm, MusicRootId } from "../composition/roots";
 import type { MusicRhythmLuteConfig } from "../composition/rhythm-lute-config";
 import type { MusicSettings } from "../musicSettings";
 import type { MusicEffectId, MusicEffectsConfig } from "../synthesis/effects/config";
-import { directNextMusicPiece } from "./direction";
+import { directNextMusicPiece, nextMusicRoot } from "./direction";
 import type { MusicPlaybackPort } from "./port";
 import { MusicSessionLifecycle, type MusicSessionLifecycleOptions } from "./session-lifecycle";
 import {
@@ -79,10 +78,6 @@ export class MusicSession {
     this.update({ type: "set-root", rootId });
   }
 
-  skipToNextPiece(): void {
-    this.playback.skipToNextPiece();
-  }
-
   seek(positionSeconds: number): void {
     this.playback.seek(positionSeconds);
   }
@@ -114,8 +109,8 @@ export class MusicSession {
   }
 
   randomize(): void {
-    const root = pickMusicValue(MUSIC_ROOTS, this.pick);
-    this.update({ type: "randomize", rootId: root.id, masterSeed: this.randomSeed() });
+    const rootId = nextMusicRoot(this.snapshot.rootId, this.pick);
+    this.update({ type: "randomize", rootId, masterSeed: this.randomSeed() });
   }
 
   setNovelty(novelty: number): void {

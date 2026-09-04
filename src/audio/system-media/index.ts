@@ -63,7 +63,7 @@ function createBrowserSystemMediaHost(): SystemMediaHost | null {
 const systemMediaCommands: SystemMediaCommands = {
   play: () => setMusicEnabled(true),
   pause: () => setMusicEnabled(false),
-  skip: () => getMusicApplication().session.skipToNextPiece(),
+  skip: () => getMusicApplication().session.randomize(),
 };
 
 let session: SystemMediaSession | null = null;

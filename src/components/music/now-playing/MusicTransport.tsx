@@ -30,8 +30,8 @@ export function MusicTransport({ enabled, volume }: { enabled: boolean; volume: 
         >
           {playing ? "Pause" : "Play"}
         </button>
-        <button type="button" aria-label="Next song" disabled={!enabled} onClick={() => controller.skipToNextPiece()}>
-          Next
+        <button type="button" aria-label="Randomize song" onClick={() => controller.randomize()}>
+          Randomize
         </button>
       </div>
       <label className="volume-control">

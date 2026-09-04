@@ -39,6 +39,10 @@ The player has one set of transport and volume controls. Its seek bar supports
 pointer and keyboard input during playback; track metadata is under **Track
 details**. Media keys can be enabled at the bottom of the view.
 
+**Randomize** chooses a different atmosphere and a fresh random seed, resetting
+the form and key locks. It works during playback or while paused. The system
+Next Track action uses the same randomizer.
+
 Session controls reset on reload. Played tracks are not saved, and MIDI export
 is not available.
 

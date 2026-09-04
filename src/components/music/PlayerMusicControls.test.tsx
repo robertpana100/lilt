@@ -21,7 +21,7 @@ describe("Lilt studio", () => {
     expect(screen.getByRole("button", { name: "Play music" })).toBeTruthy();
     expect(screen.getByRole("img", { name: /^Cover of / })).toBeTruthy();
     expect(screen.getByRole("slider", { name: "Music position" })).toBeTruthy();
-    expect((screen.getByRole("button", { name: "Next song" }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole("button", { name: "Randomize song" }) as HTMLButtonElement).disabled).toBe(false);
     expect(screen.queryByRole("searchbox")).toBeNull();
     expect(screen.queryByText("Library")).toBeNull();
     expect(screen.queryByRole("button", { name: /MIDI/ })).toBeNull();
@@ -33,6 +33,7 @@ describe("Lilt studio", () => {
       setMusicControlMode("override");
     });
     expect((screen.getByRole("combobox", { name: "Music root" }) as HTMLSelectElement).disabled).toBe(false);
+    expect(screen.queryByRole("button", { name: "Random atmosphere" })).toBeNull();
   });
   test("persists the system-media preference", async () => {
     await renderStudio();
