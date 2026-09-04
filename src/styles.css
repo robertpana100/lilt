@@ -438,10 +438,6 @@
   .workbench {
     margin-top: 24px;
   }
-  .direction-controls {
-    width: 100%;
-    justify-content: space-between;
-  }
   .direction-controls p {
     display: none;
   }

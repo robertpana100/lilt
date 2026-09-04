@@ -31,7 +31,7 @@ visible notifications, and the responsive studio layout.
 ## Studio
 
 The player, composition controls, instruments, and effects share one scrolling
-view. Choose **Manual** or **Enable manual controls** to edit the score,
+view. Choose **Manual** from the Direction dropdown to edit the score,
 mix, harmony, rhythm, and effects. Automatic playback keeps those controls
 visible but disabled. The player stays visible while scrolling on desktop.
 

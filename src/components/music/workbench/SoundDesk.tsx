@@ -1,5 +1,4 @@
-import { setMusicControlMode, useMusicSettings } from "@/audio/musicSettings";
-import { Button } from "@/components/ui/button";
+import { useMusicSettings } from "@/audio/musicSettings";
 import { MusicDirectionControls } from "../repertoire/MusicDirectionControls";
 import { MusicPieceSections } from "./MusicPieceSections";
 import { MusicCompositionSection } from "./MusicCompositionSection";
@@ -16,11 +15,6 @@ export default function SoundDesk() {
         </h2>
         <div className="direction-controls">
           <MusicDirectionControls settings={settings} />
-          {!manual && (
-            <Button size="sm" onClick={() => setMusicControlMode("override")}>
-              Enable manual controls
-            </Button>
-          )}
         </div>
       </div>
       <fieldset disabled={!manual} inert={!manual} className="sound-desk-controls" aria-label="Manual controls">

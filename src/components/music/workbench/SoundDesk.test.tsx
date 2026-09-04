@@ -15,13 +15,6 @@ describe("sound desk", () => {
     render(<SoundDesk />);
     await act(async () => {});
   }
-  test("requires taking manual direction before editing an automatic programme", async () => {
-    await renderDesk();
-    expect((screen.getByLabelText("Master seed").closest("fieldset") as HTMLFieldSetElement).disabled).toBe(true);
-    fireEvent.click(screen.getByRole("button", { name: "Enable manual controls" }));
-    expect(getMusicSettings().controlMode).toBe("override");
-    expect((screen.getByLabelText("Master seed").closest("fieldset") as HTMLFieldSetElement).disabled).toBe(false);
-  });
   test("edits the real composition seed and exposes registry-driven form choices", async () => {
     setMusicControlMode("override");
     await renderDesk();
@@ -36,17 +29,20 @@ describe("sound desk", () => {
   test("offers automatic and manual direction without changing the current composition", async () => {
     await renderDesk();
     const before = getMusicApplication().session.getState();
+    expect((screen.getByLabelText("Master seed").closest("fieldset") as HTMLFieldSetElement).disabled).toBe(true);
 
     fireEvent.click(screen.getByRole("combobox", { name: "Music direction" }));
     expect(screen.getAllByRole("option").map((option) => option.textContent)).toEqual(["Automatic", "Manual"]);
     fireEvent.pointerDown(screen.getByRole("option", { name: "Manual" }), { pointerType: "mouse" });
     fireEvent.click(screen.getByRole("option", { name: "Manual" }));
     expect(getMusicSettings().controlMode).toBe("override");
+    expect((screen.getByLabelText("Master seed").closest("fieldset") as HTMLFieldSetElement).disabled).toBe(false);
 
     fireEvent.click(screen.getByRole("combobox", { name: "Music direction" }));
     fireEvent.pointerDown(screen.getByRole("option", { name: "Automatic" }), { pointerType: "mouse" });
     fireEvent.click(screen.getByRole("option", { name: "Automatic" }));
     expect(getMusicSettings().controlMode).toBe("auto");
+    expect((screen.getByLabelText("Master seed").closest("fieldset") as HTMLFieldSetElement).disabled).toBe(true);
     expect(getMusicApplication().session.getState()).toBe(before);
   });
   test("controls the real mute flags, effects bypass, and paused seeking", async () => {
