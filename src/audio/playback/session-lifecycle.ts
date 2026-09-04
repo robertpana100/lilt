@@ -1,5 +1,5 @@
 import type { MusicPieceDirector } from "./program";
-import type { MusicPlaybackPort } from "./port";
+import type { MusicConfigurationOptions, MusicPlaybackPort } from "./port";
 import type { MusicSessionState } from "./session-state";
 
 export interface MusicSessionLifecycleOptions {
@@ -42,16 +42,17 @@ export class MusicSessionLifecycle {
     this.playback.setPieceDirector(null);
   }
 
-  configure(snapshot: MusicSessionState, debounce: boolean): void {
+  configure(snapshot: MusicSessionState, debounce: boolean, options?: MusicConfigurationOptions): void {
     this.cancelPendingConfiguration();
+    const apply = options ? () => this.playback.configure(snapshot, options) : () => this.playback.configure(snapshot);
     if (debounce) {
       this.configureTimer = this.scheduleTimeout(() => {
         this.configureTimer = null;
-        this.playback.configure(snapshot);
+        apply();
       }, 150);
       return;
     }
-    this.playback.configure(snapshot);
+    apply();
   }
 
   cancelPendingConfiguration(): void {

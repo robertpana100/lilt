@@ -4,7 +4,7 @@ import { DEFAULT_MUSIC_EFFECTS, normalizeMusicEffects, type MusicEffectsConfig }
 import { varyMusicEffects } from "../synthesis/effects/variation";
 import { MusicAudioContextOwner, type PieceActivationPlan } from "./audio-context";
 import { musicCompositionKey } from "./composition-config";
-import type { MusicPlaybackPort } from "./port";
+import type { MusicConfigurationOptions, MusicPlaybackPort } from "./port";
 import { MusicProgram, type MusicPieceDirector } from "./program";
 import { MusicStatusReporter } from "./reporter";
 import { MusicRuntimePublisher } from "./runtime";
@@ -166,10 +166,14 @@ export class TavernMusicEngine implements MusicPlaybackPort {
     this.audio.setVolume(this.volume, this.enabled);
   }
 
-  configure(config: MusicEngineConfig): void {
-    this.audio.setEffects(this.rackEffects(config.effects));
+  configure(config: MusicEngineConfig, options: MusicConfigurationOptions = {}): void {
     const regenerate = musicCompositionKey(this.config) !== musicCompositionKey(config);
     if (!regenerate) {
+      // A listener can enable an effect whose session default is already on
+      // but whose generated switch is off. Reattachments carry no such intent.
+      if (options.applyEffects || JSON.stringify(config.effects) !== JSON.stringify(this.config.effects)) {
+        this.audio.setEffects(this.rackEffects(config.effects));
+      }
       const reschedule =
         this.config.humanization !== config.humanization ||
         this.config.mutedParts.strings !== config.mutedParts.strings ||
@@ -190,7 +194,9 @@ export class TavernMusicEngine implements MusicPlaybackPort {
     // tempo feeds the length target — so the piece deliberately restarts from
     // its first pulse rather than resuming mid-phrase inside a different
     // composition.
+    const retainedEffects = options.preserveEffects ? this.soundingRack() : null;
     this.program.regenerate(config, config.pieceIndex);
+    this.appliedRack = retainedEffects;
     this.transport.rewind();
     this.restartPiece();
   }
@@ -209,6 +215,7 @@ export class TavernMusicEngine implements MusicPlaybackPort {
       this.reporter.complete();
       return;
     }
+    this.appliedRack = null;
     this.transport.rewind();
     this.restartPiece();
   }
@@ -284,8 +291,7 @@ export class TavernMusicEngine implements MusicPlaybackPort {
     const startTime = Math.max(plan.targetTime, context.currentTime + RESTART_LEAD_SECONDS);
     // The piece being activated is scheduled moments later; composing it here
     // only front-loads work this same call performs anyway.
-    this.appliedRack = varyMusicEffects(this.config.effects, this.program.piece.performanceSeed);
-    this.audio.setEffects(this.appliedRack);
+    this.audio.setEffects(this.soundingRack());
     this.audio.restoreMasterLevel(this.volume);
     if (plan.replacePieceBus) this.audio.createPieceBus(startTime, plan.fadeIn);
     this.transport.startAt(startTime);
@@ -397,6 +403,7 @@ export class TavernMusicEngine implements MusicPlaybackPort {
       this.reporter.complete();
       return;
     }
+    this.appliedRack = null;
     this.transport.rewind();
     this.beginPlaying(
       {
@@ -422,9 +429,8 @@ export class TavernMusicEngine implements MusicPlaybackPort {
     return this.appliedRack;
   }
 
-  /** The rack the sounding take runs; before anything plays, the coin the
-   * opening take would draw. */
+  /** Choose once per piece, then retain the rack through restarts and resumes. */
   private soundingRack(): MusicEffectsConfig {
-    return this.appliedRack ?? varyMusicEffects(this.config.effects, this.program.piece.performanceSeed);
+    return (this.appliedRack ??= varyMusicEffects(this.config.effects, this.program.piece.performanceSeed));
   }
 }

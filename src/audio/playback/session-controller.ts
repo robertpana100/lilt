@@ -4,7 +4,7 @@ import type { MusicRhythmLuteConfig } from "../composition/rhythm-lute-config";
 import type { MusicSettings } from "../musicSettings";
 import type { MusicEffectId, MusicEffectsConfig } from "../synthesis/effects/config";
 import { directNextMusicPiece, nextMusicRoot } from "./direction";
-import type { MusicPlaybackPort } from "./port";
+import type { MusicConfigurationOptions, MusicPlaybackPort } from "./port";
 import { MusicSessionLifecycle, type MusicSessionLifecycleOptions } from "./session-lifecycle";
 import {
   cloneMusicSessionState,
@@ -97,7 +97,11 @@ export class MusicSession {
   }
 
   newComposition(): void {
-    this.setMasterSeed(this.randomSeed());
+    this.publish(
+      reduceMusicSessionState(this.snapshot, { type: "set-master-seed", masterSeed: this.randomSeed() }),
+      false,
+      { preserveEffects: true },
+    );
   }
 
   newVariation(): void {
@@ -158,11 +162,11 @@ export class MusicSession {
   }
 
   setEffect<Id extends MusicEffectId>(effect: Id, patch: Partial<MusicEffectsConfig[Id]>): void {
-    this.publish(updateMusicSessionEffect(this.snapshot, effect, patch));
+    this.publish(updateMusicSessionEffect(this.snapshot, effect, patch), false, { applyEffects: true });
   }
 
   resetEffects(): void {
-    this.update({ type: "reset-effects" });
+    this.publish(reduceMusicSessionState(this.snapshot, { type: "reset-effects" }), false, { applyEffects: true });
   }
 
   reset(): void {
@@ -177,9 +181,9 @@ export class MusicSession {
     this.publish(reduceMusicSessionState(this.snapshot, action), debounce);
   }
 
-  private publish(next: MusicSessionState, debounce = false): void {
+  private publish(next: MusicSessionState, debounce = false, options?: MusicConfigurationOptions): void {
     this.snapshot = next;
-    this.lifecycle.configure(next, debounce);
+    this.lifecycle.configure(next, debounce, options);
     this.listeners.forEach((listener) => listener());
   }
 

@@ -56,7 +56,7 @@ export function MusicTransport({ enabled, volume }: { enabled: boolean; volume: 
         <button
           type="button"
           aria-label="New composition"
-          title="Generate a fresh song with the same atmosphere, tempo, and form and key settings."
+          title="Generate a fresh song while keeping the current effects, atmosphere, tempo, and form and key settings."
           onClick={() => controller.newComposition()}
         >
           New composition

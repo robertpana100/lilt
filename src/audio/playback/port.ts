@@ -1,6 +1,13 @@
 import type { MusicPieceDirector } from "./program";
 import type { MusicEngineConfig, MusicRuntimeSnapshot } from "./types";
 
+export interface MusicConfigurationOptions {
+  /** Carry the active effects into a replacement composition, including listener edits. */
+  preserveEffects?: boolean;
+  /** Apply an explicit listener edit even if it matches the unvaried session defaults. */
+  applyEffects?: boolean;
+}
+
 /**
  * The one application-facing playback port. `TavernMusicEngine` implements
  * it; sessions and lifecycle owners depend on this contract rather than
@@ -10,7 +17,7 @@ export interface MusicPlaybackPort {
   start(): Promise<void>;
   stop(): void;
   setVolume(volume: number): void;
-  configure(config: MusicEngineConfig): void;
+  configure(config: MusicEngineConfig, options?: MusicConfigurationOptions): void;
   skipToNextPiece(): void;
   seek(positionSeconds: number): void;
   setPieceDirector(director: MusicPieceDirector | null): void;

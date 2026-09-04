@@ -23,7 +23,10 @@ behavior rather than reaching through the engine. Every generated performance
 recasts the rack from its own performance seed — a weighted coin picks which
 modules join the take, amounts drift in small bands, and the room only ever
 opens further — while the session settings and bypass keep
-exactly what the listener set. The sounding rack is published in the runtime
+exactly what the listener set. New composition explicitly carries the current
+effects into the replacement piece, including listener edits. Pause/resume and
+unrelated rendering edits also retain that rack; Randomize and automatic
+advancement select a new one. The sounding rack is published in the runtime
 snapshot, so the debug switches show what each take runs; a switch flipped
 mid-take overrides that take until the next piece.
 
