@@ -8,9 +8,9 @@ describe("music settings", () => {
     reloadMusicSettingsFromStorage();
   });
 
-  test("starts music for players without a stored preference", () => {
+  test("waits for explicit playback for a first-time listener", () => {
     expect(DEFAULT_MUSIC_SETTINGS).toMatchObject({
-      enabled: true,
+      enabled: false,
       volume: 0.35,
       controlMode: "auto",
       favoritesOrder: "shuffle",

@@ -15,7 +15,7 @@ export interface MusicSettings {
 
 export const MUSIC_SETTINGS_STORAGE_KEY = "lilt-music";
 export const DEFAULT_MUSIC_SETTINGS: MusicSettings = {
-  enabled: true,
+  enabled: false,
   volume: 0.35,
   controlMode: "auto",
   favoritesOrder: "shuffle",
