@@ -30,6 +30,19 @@ visible notifications, and the responsive studio layout.
 - `npm run lint` — code, React, accessibility, and independence checks.
 - `npm run format` / `npm run format:check` — formatting.
 
+## Studio
+
+- **Repertoire:** automatic listening, manual atmosphere and tempo, new songs,
+  variations, performances, and favourite playlists.
+- **Sound desk:** seed and form controls, per-lute mixing, harmony and rhythm,
+  instrument/chord audition with a live spectrum, six effects, and seeking.
+  Choose **Take the lead** to make manual edits. Settings in the sound desk last
+  for the session; favouriting a played take preserves its replay recipe.
+- **Your library:** the latest 25 played takes and up to 100 favourites, searchable
+  by title and musical details. MIDI downloads contain note data, not rendered audio.
+
+The sound desk loads on demand. Playback keeps running when switching panels.
+
 ## Ownership
 
 `src/audio` owns composition, arrangement, synthesis, effects, playback, settings,

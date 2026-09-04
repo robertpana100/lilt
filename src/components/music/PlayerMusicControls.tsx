@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { getMusicRoot } from "@/audio/composition/roots";
 import { useMusicRuntime } from "@/audio/playback/react";
 import { useMusicSettings } from "@/audio/musicSettings";
@@ -6,6 +7,8 @@ import { MusicLibrarySection } from "./library/MusicLibrarySection";
 import { NowPlayingCard } from "./now-playing/NowPlayingCard";
 import { SystemMediaToggle } from "./now-playing/SystemMediaToggle";
 import { RepertoirePanel } from "./repertoire/RepertoirePanel";
+const SoundDesk = lazy(() => import("./workbench/SoundDesk"));
+
 export function PlayerMusicControls() {
   const settings = useMusicSettings();
   const runtime = useMusicRuntime();
@@ -23,10 +26,16 @@ export function PlayerMusicControls() {
       <Tabs defaultValue="repertoire" className="workspace">
         <TabsList aria-label="Studio workspace" variant="line" className="workspace-nav">
           <TabsTrigger value="repertoire">Repertoire</TabsTrigger>
+          <TabsTrigger value="sound-desk">Sound desk</TabsTrigger>
           <TabsTrigger value="library">Your library</TabsTrigger>
         </TabsList>
         <TabsContent value="repertoire">
           <RepertoirePanel />
+        </TabsContent>
+        <TabsContent value="sound-desk">
+          <Suspense fallback={<p role="status">Opening the sound desk…</p>}>
+            <SoundDesk />
+          </Suspense>
         </TabsContent>
         <TabsContent value="library">
           <MusicLibrarySection />

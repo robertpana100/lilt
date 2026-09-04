@@ -544,3 +544,41 @@ main,
 .player-transport {
   margin-top: 20px;
 }
+
+.control-section {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.control-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+.control-section h3 + p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+  margin-top: 4px;
+}
+.sound-desk-tabs {
+  width: 100%;
+}
+.sound-desk-tabs > button {
+  min-height: 30px;
+  font-size: 12px;
+}
+.manual-invitation {
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 24px;
+  border-radius: 12px;
+}
+.manual-invitation p {
+  font-size: 13px;
+  line-height: 1.8;
+  margin-bottom: 18px;
+  color: var(--muted-foreground);
+}
