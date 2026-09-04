@@ -31,7 +31,7 @@ export function NowPlayingCard({ root, runtime, enabled, volume }: NowPlayingCar
       </div>
       <div className="record-sleeve">
         <div className="sleeve-caption">
-          LILT RECORDINGS <span>GENERATED WITH CARE</span>
+          LILT SESSIONS <span>GENERATED WITH CARE</span>
         </div>
         <div className="cover-frame">
           <MusicCoverArt subject={runtime} size={244} label={`Cover of ${runtime.name}`} />

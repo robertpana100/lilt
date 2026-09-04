@@ -63,8 +63,8 @@ export function MusicInfoDialog() {
             <p className="font-medium">Historically informed, not a historical recording</p>
             <p className="mt-1 text-muted-foreground">
               These are original pieces built from rules related to medieval music, not reconstructions of surviving
-              works. Mood labels, exact tempos, and the solo-lute interpretation are modern creative choices made for
-              Lilt.
+              works. Mood labels, exact tempos, and the lute-ensemble interpretation are modern creative choices made
+              for Lilt.
             </p>
           </div>
           <section>

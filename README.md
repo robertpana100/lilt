@@ -48,7 +48,8 @@ The sound desk loads on demand. Playback keeps running when switching panels.
 `src/audio` owns composition, arrangement, synthesis, effects, playback, settings,
 library/history, cover art, MIDI export, and system-media integration. Cover art
 accepts colors from its host; it does not depend on a theme implementation.
-See [audio architecture](src/audio/ARCHITECTURE.md).
+See [audio architecture](src/audio/ARCHITECTURE.md) and
+[extraction boundaries and verification](docs/extraction.md).
 
 This is an independent source extraction, not a linked workspace. The original
 game retains its music; changes in either repository do not propagate to the other.
