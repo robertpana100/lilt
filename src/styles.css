@@ -189,6 +189,27 @@ input[type="checkbox"] {
   flex-direction: column;
   gap: 10px;
 }
+.playback-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.composition-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.composition-actions button {
+  white-space: nowrap;
+}
+.composition-actions small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
 .button-row {
   display: flex;
   flex-wrap: wrap;
@@ -417,13 +438,6 @@ summary {
   .player {
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
-  }
-  .transport-controls {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
   }
   .volume-control {
     max-width: 150px;

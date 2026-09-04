@@ -46,11 +46,6 @@ export function MusicPieceSections() {
           onChange={(value) => controller.setHumanization(value)}
         />
       </div>
-      <div className="button-row">
-        <button type="button" onClick={() => controller.newComposition()}>
-          New composition
-        </button>
-      </div>
     </section>
   );
 }

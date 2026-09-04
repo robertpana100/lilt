@@ -1,10 +1,15 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-const mocks = vi.hoisted(() => ({ unlock: vi.fn(), randomize: vi.fn(), runtime: { status: "stopped" } }));
+const mocks = vi.hoisted(() => ({
+  unlock: vi.fn(),
+  randomize: vi.fn(),
+  newComposition: vi.fn(),
+  runtime: { status: "stopped" },
+}));
 vi.mock("@/audio/application", () => ({ getMusicApplication: () => ({ unlock: mocks.unlock }) }));
 vi.mock("@/audio/playback/react", () => ({
   useMusicRuntime: () => mocks.runtime,
-  useMusicSessionController: () => ({ randomize: mocks.randomize }),
+  useMusicSessionController: () => ({ randomize: mocks.randomize, newComposition: mocks.newComposition }),
 }));
 import { getMusicSettings } from "@/audio/musicSettings";
 import { dismissNotification } from "@/app/notifications/store";
@@ -20,11 +25,15 @@ describe("explicit playback", () => {
     mocks.runtime.status = "stopped";
   });
   afterEach(cleanup);
-  test.each([false, true])("randomizes without changing playback when enabled is %s", (enabled) => {
+  test.each([false, true])("generates songs without changing playback when enabled is %s", (enabled) => {
     mocks.runtime.status = enabled ? "playing" : "stopped";
     render(<MusicTransport enabled={enabled} volume={0.35} />);
     const before = getMusicSettings().enabled;
     fireEvent.click(screen.getByRole("button", { name: "Randomize song" }));
+    expect(mocks.randomize).toHaveBeenCalledOnce();
+    expect(mocks.newComposition).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "New composition" }));
+    expect(mocks.newComposition).toHaveBeenCalledOnce();
     expect(mocks.randomize).toHaveBeenCalledOnce();
     expect(mocks.unlock).not.toHaveBeenCalled();
     expect(getMusicSettings().enabled).toBe(before);

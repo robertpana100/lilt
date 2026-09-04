@@ -21,7 +21,7 @@ export function MusicTransport({ enabled, volume }: { enabled: boolean; volume: 
   };
   return (
     <div className="transport-controls">
-      <div className="button-row">
+      <div className="playback-controls">
         <button
           type="button"
           className="primary-button"
@@ -30,22 +30,39 @@ export function MusicTransport({ enabled, volume }: { enabled: boolean; volume: 
         >
           {playing ? "Pause" : "Play"}
         </button>
-        <button type="button" aria-label="Randomize song" onClick={() => controller.randomize()}>
+        <label className="volume-control">
+          Volume
+          <input
+            aria-label="Music volume"
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={volume * 100}
+            onChange={(event) => setMusicVolume(event.currentTarget.valueAsNumber / 100)}
+          />
+        </label>
+      </div>
+      <div className="composition-actions">
+        <button
+          type="button"
+          aria-label="Randomize song"
+          title="Generate a fresh song in a different atmosphere. Reset tempo and clear form and key locks."
+          onClick={() => controller.randomize()}
+        >
           Randomize
+          <small>New atmosphere</small>
+        </button>
+        <button
+          type="button"
+          aria-label="New composition"
+          title="Generate a fresh song with the same atmosphere, tempo, and form and key settings."
+          onClick={() => controller.newComposition()}
+        >
+          New composition
+          <small>Keep settings</small>
         </button>
       </div>
-      <label className="volume-control">
-        Volume
-        <input
-          aria-label="Music volume"
-          type="range"
-          min={0}
-          max={100}
-          step={1}
-          value={volume * 100}
-          onChange={(event) => setMusicVolume(event.currentTarget.valueAsNumber / 100)}
-        />
-      </label>
     </div>
   );
 }

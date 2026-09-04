@@ -41,7 +41,9 @@ details**. Media keys can be enabled at the bottom of the view.
 
 **Randomize** chooses a different atmosphere and a fresh random seed, resetting
 the form and key locks. It works during playback or while paused. The system
-Next Track action uses the same randomizer.
+Next Track action uses the same randomizer. **New composition**, beside it,
+generates a fresh song while keeping the atmosphere, tempo, and form/key settings.
+Both buttons have short captions and native tooltips explaining the difference.
 
 Session controls reset on reload. Played tracks are not saved, and MIDI export
 is not available.
