@@ -32,12 +32,12 @@ palette, cover-art colors, system-media artwork, and notifications.
 Automatic mode shows the player and direction selector. Choose **Manual** to
 reveal atmosphere, tempo, variety, humanization, and effects. Effect parameters
 appear only while their effect is enabled; bypass hides the parameters while
-preserving their settings. Composition details, instruments, and audition tools
+preserving their settings. Composition details and instruments
 live in native expandable sections.
 
 The player has one set of transport and volume controls. Its seek bar supports
 pointer and keyboard input during playback; track metadata is under **Track
-details**. Media keys can be enabled at the bottom of the view.
+details**. System playback controls are available automatically where supported.
 
 **Randomize** chooses a different atmosphere and a fresh random seed, resetting
 the form and key locks. It works during playback or while paused. The system

@@ -375,20 +375,6 @@ summary {
   grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 }
-.audition-spectrum {
-  display: block;
-  width: 100%;
-  height: 64px;
-  color: var(--foreground);
-}
-.studio-footer {
-  margin-top: 24px;
-  color: var(--muted);
-  font-size: 12px;
-}
-.studio-footer .checkbox-field {
-  font-size: 12px;
-}
 .skip-link {
   position: fixed;
   top: 8px;

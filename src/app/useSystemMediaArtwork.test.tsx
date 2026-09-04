@@ -30,15 +30,15 @@ describe("standalone media artwork", () => {
   });
   afterEach(cleanup);
   test("does not compose a silent session just to draw a cover", () => {
-    renderHook(() => useSystemMediaArtwork(true));
+    renderHook(() => useSystemMediaArtwork());
     expect(mocks.peek).toHaveBeenCalledOnce();
     expect(mocks.render).not.toHaveBeenCalled();
     expect(mocks.subscribe).toHaveBeenCalledOnce();
   });
-  test("uses Lilt colours, redraws only a changed take, and detaches when disabled", () => {
+  test("uses Lilt colours, redraws only a changed take, and detaches on unmount", () => {
     const take = { name: "A small song" };
     mocks.peek.mockReturnValue(take);
-    const hook = renderHook(({ enabled }) => useSystemMediaArtwork(enabled), { initialProps: { enabled: true } });
+    const hook = renderHook(() => useSystemMediaArtwork());
     expect(mocks.render).toHaveBeenCalledWith(take, COVER_COLORS.light);
     expect(mocks.setArtwork).toHaveBeenCalledWith("data:image/png;base64,one");
     act(() => mocks.publish?.());
@@ -46,7 +46,7 @@ describe("standalone media artwork", () => {
     mocks.render.mockReturnValue({ key: "take-two", url: "data:image/png;base64,two" });
     act(() => mocks.publish?.());
     expect(mocks.setArtwork).toHaveBeenLastCalledWith("data:image/png;base64,two");
-    hook.rerender({ enabled: false });
+    hook.unmount();
     expect(mocks.unsubscribe).toHaveBeenCalledOnce();
     expect(mocks.subscribe).toHaveBeenCalledOnce();
   });
@@ -54,7 +54,7 @@ describe("standalone media artwork", () => {
     const take = { name: "A small song" };
     mocks.peek.mockReturnValue(take);
     mocks.render.mockImplementation((_take, colors) => ({ key: colors.background, url: colors.background }));
-    renderHook(() => useSystemMediaArtwork(true));
+    renderHook(() => useSystemMediaArtwork());
     act(() => getAppearanceStore().setPreference("dark"));
     expect(mocks.render).toHaveBeenLastCalledWith(take, COVER_COLORS.dark);
     expect(mocks.setArtwork).toHaveBeenLastCalledWith(COVER_COLORS.dark.background);

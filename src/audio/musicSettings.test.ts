@@ -28,7 +28,6 @@ describe("music settings", () => {
         enabled: false,
         volume: 0.7,
         controlMode: "auto",
-        systemMediaControls: true,
       });
     },
   );

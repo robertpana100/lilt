@@ -26,7 +26,6 @@ const mocks = vi.hoisted(() => {
       enabled: true,
       volume: 0.35,
       controlMode: "auto",
-      systemMediaControls: true,
     } as MusicSettings,
     playback,
     unsubscribeRuntime,
@@ -49,7 +48,6 @@ describe("procedural music browser host", () => {
     vi.clearAllMocks();
     mocks.settings.enabled = true;
     mocks.settings.controlMode = "auto";
-    mocks.settings.systemMediaControls = true;
     mocks.application.unlock.mockResolvedValue(true);
     mocks.playback.peekRuntimeSnapshot.mockReturnValue(null);
     mocks.application.attach.mockReturnValue(mocks.detachApplication);
@@ -68,12 +66,9 @@ describe("procedural music browser host", () => {
     fireEvent.keyDown(window);
     expect(mocks.application.unlock).toHaveBeenCalledOnce();
 
-    mocks.settings.systemMediaControls = false;
-    view.rerender(<ProceduralMusic />);
+    view.unmount();
     expect(mocks.unsubscribeRuntime).toHaveBeenCalledOnce();
     expect(mocks.media.detach).toHaveBeenCalled();
-
-    view.unmount();
     expect(mocks.detachApplication).toHaveBeenCalledOnce();
     expect(mocks.media.dispose).toHaveBeenCalledOnce();
   });

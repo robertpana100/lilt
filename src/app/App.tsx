@@ -1,12 +1,10 @@
 import { AppearanceControl } from "@/appearance/AppearanceControl";
 import { ProceduralMusic } from "@/audio/ProceduralMusic";
-import { useMusicSettings } from "@/audio/musicSettings";
 import { PlayerMusicControls } from "@/components/music/PlayerMusicControls";
 import { NotificationBanner } from "./notifications/NotificationBanner";
 import { useSystemMediaArtwork } from "./useSystemMediaArtwork";
 export function App() {
-  const settings = useMusicSettings();
-  useSystemMediaArtwork(settings.systemMediaControls);
+  useSystemMediaArtwork();
   return (
     <>
       <a className="skip-link" href="#studio">

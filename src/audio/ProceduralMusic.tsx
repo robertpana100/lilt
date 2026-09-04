@@ -26,10 +26,6 @@ export function ProceduralMusic() {
   useEffect(() => {
     const media = getSystemMediaSession();
     if (!media) return;
-    if (!settings.systemMediaControls) {
-      media.detach();
-      return;
-    }
     const publish = () => syncSystemMedia(media, playback, getMusicSettings().enabled);
     media.attach();
     publish();
@@ -38,14 +34,13 @@ export function ProceduralMusic() {
       unsubscribe();
       media.detach();
     };
-  }, [playback, settings.systemMediaControls]);
+  }, [playback]);
 
   // Pausing changes no piece, so it publishes no runtime snapshot of its own.
   useEffect(() => {
-    if (!settings.systemMediaControls) return;
     const media = getSystemMediaSession();
     if (media) syncSystemMedia(media, playback, settings.enabled);
-  }, [playback, settings.enabled, settings.systemMediaControls]);
+  }, [playback, settings.enabled]);
 
   // The music session is the single owner of engine configuration, including
   // which root plays next; this host only owns browser lifecycle.

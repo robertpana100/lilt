@@ -4,12 +4,6 @@ export interface MusicSettings {
   enabled: boolean;
   volume: number;
   controlMode: "auto" | "override";
-  /**
-   * Whether the score appears in the operating system's now-playing surface and
-   * answers the hardware media keys. Those keys are shared with every other
-   * player on the machine, so this stays a setting rather than a given.
-   */
-  systemMediaControls: boolean;
 }
 
 export const MUSIC_SETTINGS_STORAGE_KEY = "lilt-music";
@@ -17,7 +11,6 @@ export const DEFAULT_MUSIC_SETTINGS: MusicSettings = {
   enabled: false,
   volume: 0.35,
   controlMode: "auto",
-  systemMediaControls: true,
 };
 const listeners = new Set<() => void>();
 let snapshot: MusicSettings | null = null;
@@ -33,10 +26,6 @@ function loadSettings(): MusicSettings {
       volume:
         typeof stored?.volume === "number" ? Math.min(1, Math.max(0, stored.volume)) : DEFAULT_MUSIC_SETTINGS.volume,
       controlMode: stored?.controlMode === "override" ? "override" : "auto",
-      systemMediaControls:
-        typeof stored?.systemMediaControls === "boolean"
-          ? stored.systemMediaControls
-          : DEFAULT_MUSIC_SETTINGS.systemMediaControls,
     };
   } catch {
     snapshot = DEFAULT_MUSIC_SETTINGS;
@@ -84,10 +73,6 @@ export function setMusicVolume(volume: number): void {
 
 export function setMusicControlMode(controlMode: MusicSettings["controlMode"]): void {
   saveSettings({ ...loadSettings(), controlMode });
-}
-
-export function setMusicSystemMediaControls(systemMediaControls: boolean): void {
-  saveSettings({ ...loadSettings(), systemMediaControls });
 }
 
 export function useMusicSettings(): MusicSettings {

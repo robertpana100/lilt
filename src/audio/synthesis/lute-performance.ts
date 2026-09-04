@@ -4,7 +4,7 @@ import type { MusicSynth } from "./synth";
 
 const CHORD_PAN_WIDTH = 0.08;
 
-/** Coordinated course scheduling shared by generated music and audition. */
+/** Coordinated course scheduling for generated lute voicings. */
 export function playLuteVoicing(
   synth: MusicSynth,
   style: LuteStyleId,

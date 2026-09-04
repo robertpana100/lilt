@@ -2,7 +2,6 @@ import { getMusicRoot } from "@/audio/composition/roots";
 import { useMusicRuntime } from "@/audio/playback/react";
 import { useMusicSettings } from "@/audio/musicSettings";
 import { NowPlayingCard } from "./now-playing/NowPlayingCard";
-import { SystemMediaToggle } from "./now-playing/SystemMediaToggle";
 import SoundDesk from "./workbench/SoundDesk";
 
 export function PlayerMusicControls() {
@@ -17,9 +16,6 @@ export function PlayerMusicControls() {
         volume={settings.volume}
       />
       <SoundDesk />
-      <footer className="studio-footer">
-        <SystemMediaToggle enabled={settings.systemMediaControls} />
-      </footer>
     </div>
   );
 }

@@ -4,11 +4,11 @@ import { getMusicApplication } from "@/audio/application";
 import { coverArtImage } from "@/audio/cover-art";
 import { getSystemMediaSession } from "@/audio/system-media";
 import { COVER_COLORS } from "@/appearance/cover-colors";
-export function useSystemMediaArtwork(enabled: boolean): void {
+export function useSystemMediaArtwork(): void {
   const colors = COVER_COLORS[useAppearance().resolved];
   useEffect(() => {
     const media = getSystemMediaSession();
-    if (!media || !enabled) return;
+    if (!media) return;
     const playback = getMusicApplication().playback;
     let published: string | null = null;
     const publish = () => {
@@ -21,5 +21,5 @@ export function useSystemMediaArtwork(enabled: boolean): void {
     };
     publish();
     return playback.subscribeRuntime(publish);
-  }, [enabled, colors]);
+  }, [colors]);
 }

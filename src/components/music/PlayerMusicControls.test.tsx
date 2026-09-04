@@ -1,6 +1,6 @@
 import "@/test/register-dom";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { getMusicSettings, setMusicControlMode } from "@/audio/musicSettings";
 import { reloadMusicSettingsFromStorage } from "@/test/music-settings";
 import { PlayerMusicControls } from "./PlayerMusicControls";
@@ -25,6 +25,7 @@ describe("Lilt studio", () => {
     expect(screen.queryByRole("searchbox")).toBeNull();
     expect(screen.queryByText("Library")).toBeNull();
     expect(screen.queryByRole("button", { name: /MIDI/ })).toBeNull();
+    expect(screen.queryByRole("checkbox", { name: "Show music in system controls" })).toBeNull();
   });
   test("keeps the automatic player free of manual controls", async () => {
     await renderStudio();
@@ -34,12 +35,5 @@ describe("Lilt studio", () => {
     });
     expect((screen.getByRole("combobox", { name: "Music root" }) as HTMLSelectElement).disabled).toBe(false);
     expect(screen.queryByRole("button", { name: "Random atmosphere" })).toBeNull();
-  });
-  test("persists the system-media preference", async () => {
-    await renderStudio();
-    expect(screen.queryByRole("tab")).toBeNull();
-    const controls = screen.getByRole("checkbox", { name: "Show music in system controls" });
-    fireEvent.click(controls);
-    expect(getMusicSettings().systemMediaControls).toBe(false);
   });
 });

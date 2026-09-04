@@ -11,7 +11,6 @@ const SETTINGS: MusicSettings = {
   enabled: true,
   volume: 0.4,
   controlMode: "auto",
-  systemMediaControls: true,
 };
 
 function fakePlayback() {

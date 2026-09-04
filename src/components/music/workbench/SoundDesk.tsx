@@ -4,7 +4,6 @@ import { MusicPieceSections } from "./MusicPieceSections";
 import { MusicCompositionSection } from "./MusicCompositionSection";
 import { MusicArrangementSections } from "./MusicArrangementSections";
 import { MusicEffectsSection } from "./MusicEffectsSection";
-import { AuditionPanel } from "./AuditionPanel";
 import { Disclosure } from "./Disclosure";
 
 export default function SoundDesk() {
@@ -24,9 +23,6 @@ export default function SoundDesk() {
             </Disclosure>
             <Disclosure title="Instruments">
               <MusicArrangementSections />
-            </Disclosure>
-            <Disclosure title="Audition">
-              <AuditionPanel />
             </Disclosure>
           </div>
         </div>

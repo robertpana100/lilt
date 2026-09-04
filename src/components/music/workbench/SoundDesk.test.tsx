@@ -58,11 +58,12 @@ describe("sound desk", () => {
     expect(controller.getState().formOverride).toBe(option.value);
   });
 
-  test("keeps instrument and audition controls in closed native disclosures", async () => {
+  test("keeps instrument controls in a closed native disclosure", async () => {
     setMusicControlMode("override");
     render(<SoundDesk />);
     expect(screen.queryByRole("checkbox", { name: "Enable rhythm lute" })).toBeNull();
     expect(screen.queryByRole("combobox", { name: "Chord audition lute body" })).toBeNull();
+    expect(screen.queryByText("Audition")).toBeNull();
     await openSection("Instruments");
     const control = await screen.findByRole("checkbox", { name: "Enable rhythm lute" });
     const session = getMusicApplication().session;
@@ -70,9 +71,5 @@ describe("sound desk", () => {
     fireEvent.click(control);
     expect(session.getState().mutedParts.rhythm).toBe(!before);
     expect(screen.queryByRole("slider", { name: "Music rhythm lute level" })).toBeNull();
-    await openSection("Audition");
-    expect(await screen.findByRole("combobox", { name: "Chord audition lute body" })).toBeTruthy();
-    await openSection("Audition");
-    await waitFor(() => expect(screen.queryByRole("combobox", { name: "Chord audition lute body" })).toBeNull());
   });
 });
