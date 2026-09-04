@@ -1,2 +1,2 @@
-/** Which shelf of the library is on show: what has played, or what was kept. */
-export type MusicLibraryTab = "recent" | "favorites";
+/** The two collections displayed in the music library. */
+export type MusicLibraryShelf = "recent" | "favorites";

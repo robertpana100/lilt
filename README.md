@@ -30,16 +30,19 @@ visible notifications, and the responsive studio layout.
 
 ## Studio
 
-- **Repertoire:** automatic listening, manual atmosphere and tempo, new songs,
-  variations, performances, and favourite playlists.
-- **Sound desk:** seed and form controls, per-lute mixing, harmony and rhythm,
-  instrument/chord audition with a live spectrum, six effects, and seeking.
-  Choose **Enable manual controls** to make manual edits. Settings in the sound desk last
-  for the session; favouriting a played take preserves its replay recipe.
-- **Your library:** the latest 25 played takes and up to 100 favourites, searchable
-  by title and musical details. MIDI downloads contain note data, not rendered audio.
+The player, composition controls, instruments, effects, and library share one
+scrolling view. Choose **Manual** or **Enable manual controls** to edit the score,
+mix, harmony, rhythm, and effects. Automatic and favourite playback keep those
+controls visible but disabled. The player stays visible while scrolling on desktop.
 
-The sound desk loads on demand. Playback keeps running when switching panels.
+**Recent** and **Favourites** appear together and share a search field. The library
+keeps the latest 25 played takes and up to 100 favourites. MIDI downloads contain
+note data. Session controls reset on reload; favouriting a played take preserves
+its replay recipe.
+
+The header offers **Light**, **Dark**, and **System** appearance. The choice persists
+locally, follows OS changes in System mode, and updates both the interface and
+cover art without restarting playback.
 
 ## Ownership
 

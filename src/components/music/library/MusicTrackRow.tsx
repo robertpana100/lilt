@@ -9,16 +9,16 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle }
 import { MusicCoverArt } from "../MusicCoverArt";
 import { durationLabel } from "../format";
 import { MusicTrackDownload } from "./MusicTrackDownload";
-import type { MusicLibraryTab } from "./types";
+import type { MusicLibraryShelf } from "./types";
 
 interface MusicTrackRowProps {
   entry: MusicLibraryTrack;
-  tab: MusicLibraryTab;
+  shelf: MusicLibraryShelf;
   favorite: boolean;
 }
 
 /** One saved take: its cover, what it is, and what can be done with it. */
-export function MusicTrackRow({ entry, tab, favorite }: MusicTrackRowProps) {
+export function MusicTrackRow({ entry, shelf, favorite }: MusicTrackRowProps) {
   // Everything a row shows comes from the take's cheap description and its
   // pre-resolved lineup; reading `entry.piece` here would compose every take
   // in the shelf just to render the list. The lineup already reflects the
@@ -27,20 +27,20 @@ export function MusicTrackRow({ entry, tab, favorite }: MusicTrackRowProps) {
 
   // ItemGroup announces role=list, so each row must be its listitem.
   return (
-    <Item role="listitem" variant="outline" size="sm">
+    <Item role="listitem" variant="outline" size="sm" className="grid grid-cols-[40px_minmax(0,1fr)_auto]">
       <ItemMedia>
         <MusicCoverArt subject={entry.description} size={40} label={`Cover of ${entry.name}`} />
       </ItemMedia>
       <ItemContent className="min-w-0">
-        <ItemTitle className="max-w-full truncate">{entry.name}</ItemTitle>
-        <ItemDescription className="line-clamp-1 text-2xs">
+        <ItemTitle className="block max-w-full truncate">{entry.name}</ItemTitle>
+        <ItemDescription className="truncate text-2xs">
           {entry.rootName} · {entry.theme} · {MUSIC_FORM_LABELS[entry.description.form]} · {entry.description.bpm} BPM ·{" "}
           {durationLabel(entry.description.durationSeconds)}
         </ItemDescription>
-        <ItemDescription className="line-clamp-1 text-2xs text-muted-foreground/80">{instrument}</ItemDescription>
+        <ItemDescription className="truncate text-2xs text-muted-foreground/80">{instrument}</ItemDescription>
       </ItemContent>
-      <ItemActions className="ml-auto gap-0.5">
-        {tab === "favorites" && (
+      <ItemActions className="ml-auto shrink-0 gap-0.5">
+        {shelf === "favorites" && (
           <Button
             size="icon-sm"
             variant="ghost"
@@ -60,11 +60,6 @@ export function MusicTrackRow({ entry, tab, favorite }: MusicTrackRowProps) {
             const result = toggleMusicFavorite(entry);
             if (result === "library-full") {
               notify("error", `Favourites are full (${MAX_MUSIC_FAVORITES}). Remove one to keep ${entry.name}.`);
-            } else {
-              notify(
-                "success",
-                result === "added" ? `${entry.name} added to Favourites` : `${entry.name} removed from Favourites`,
-              );
             }
           }}
         >

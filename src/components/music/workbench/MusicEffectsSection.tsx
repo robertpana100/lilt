@@ -23,13 +23,11 @@ export function MusicEffectsSection() {
       <SwitchRow
         ariaLabel="Bypass all music effects"
         label={<span className="text-xs font-medium">Bypass rack</span>}
-
         checked={bypassed}
         onCheckedChange={(enabled) => controller.setEffectsBypassed(enabled)}
       />
       <MusicEffectBlock
         name="Tone"
-
         enabled={sounding.tone.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("tone", { enabled })}
@@ -57,7 +55,6 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Saturation"
-
         enabled={sounding.saturation.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("saturation", { enabled })}
@@ -77,7 +74,6 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Chorus"
-
         enabled={sounding.chorus.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("chorus", { enabled })}
@@ -111,7 +107,6 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Tremolo"
-
         enabled={sounding.tremolo.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("tremolo", { enabled })}
@@ -135,7 +130,6 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Echo"
-
         enabled={sounding.echo.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("echo", { enabled })}
@@ -167,7 +161,6 @@ export function MusicEffectsSection() {
       </MusicEffectBlock>
       <MusicEffectBlock
         name="Reverb"
-
         enabled={sounding.reverb.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("reverb", { enabled })}

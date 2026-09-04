@@ -92,7 +92,6 @@ export function MusicCompositionSection() {
       <SwitchRow
         ariaLabel="Automatic next music piece"
         label={<span className="text-xs font-medium">Automatic repertoire</span>}
-
         checked={session.autoAdvance}
         onCheckedChange={(enabled) => controller.setAutoAdvance(enabled)}
       />

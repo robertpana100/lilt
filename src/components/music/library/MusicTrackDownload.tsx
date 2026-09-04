@@ -2,7 +2,6 @@ import { IconDownload } from "@tabler/icons-react";
 import { downloadMusicMidi } from "@/audio/musicExport";
 import type { MusicLibraryTrack } from "@/audio/musicLibrary";
 import { Button } from "@/components/ui/button";
-import { notify } from "@/app/notifications/store";
 
 interface MusicTrackDownloadProps {
   entry: MusicLibraryTrack;
@@ -18,7 +17,6 @@ export function MusicTrackDownload({ entry }: MusicTrackDownloadProps) {
       title={`Export ${entry.name} as MIDI`}
       onClick={() => {
         downloadMusicMidi(entry.piece, entry.name);
-        notify("success", `${entry.name} exported as MIDI`);
       }}
     >
       <IconDownload />

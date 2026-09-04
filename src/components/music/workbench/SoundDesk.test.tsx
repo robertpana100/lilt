@@ -17,10 +17,10 @@ describe("sound desk", () => {
   }
   test("requires taking manual direction before editing an automatic or favourite programme", async () => {
     await renderDesk();
-    expect(screen.queryByLabelText("Master seed")).toBeNull();
+    expect((screen.getByLabelText("Master seed").closest("fieldset") as HTMLFieldSetElement).disabled).toBe(true);
     fireEvent.click(screen.getByRole("button", { name: "Enable manual controls" }));
     expect(getMusicSettings().controlMode).toBe("override");
-    expect(screen.getByLabelText("Master seed")).toBeTruthy();
+    expect((screen.getByLabelText("Master seed").closest("fieldset") as HTMLFieldSetElement).disabled).toBe(false);
   });
   test("edits the real composition seed and exposes registry-driven form choices", async () => {
     setMusicControlMode("override");
@@ -37,16 +37,13 @@ describe("sound desk", () => {
     setMusicControlMode("override");
     await renderDesk();
     const session = getMusicApplication().session;
-    fireEvent.click(screen.getByRole("tab", { name: "Instruments" }));
     const previouslyMuted = session.getState().mutedParts.rhythm;
     fireEvent.click(screen.getByRole("switch", { name: "Enable rhythm lute" }));
     expect(session.getState().mutedParts.rhythm).toBe(!previouslyMuted);
     expect(screen.getByRole("combobox", { name: "Chord audition lute body" })).toBeTruthy();
-    fireEvent.click(screen.getByRole("tab", { name: "Effects" }));
     const previousBypass = session.getState().effects.bypassed;
     fireEvent.click(screen.getByRole("switch", { name: "Bypass all music effects" }));
     expect(session.getState().effects.bypassed).toBe(!previousBypass);
-    fireEvent.click(screen.getByRole("tab", { name: "Playback" }));
     expect((screen.getByLabelText("Music position") as HTMLInputElement).disabled).toBe(true);
   });
 });

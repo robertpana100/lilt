@@ -1,3 +1,4 @@
+import { useAppearance } from "@/appearance/browser";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { coverArtDesign, type CoverArtSubject } from "@/audio/cover-art/design";
 import { drawCoverArt } from "@/audio/cover-art/render";
@@ -38,13 +39,15 @@ interface MusicCoverArtProps {
  * own path for that.
  */
 export function MusicCoverArt({ subject, size = 56, label = "Cover art" }: MusicCoverArtProps) {
+  const { resolved } = useAppearance();
+  const colors = COVER_COLORS[resolved];
   const { rootId, form, tonicMidi, compositionSeed, variationSeed } = subject;
   // The sounding snapshot is republished on every scheduler tick, and a fresh
   // object each time. Holding the design by what it is drawn from, rather than
   // by the object it came in, keeps a tick that changed nothing from repainting.
   const design = useMemo(
-    () => coverArtDesign({ rootId, form, tonicMidi, compositionSeed, variationSeed }, COVER_COLORS),
-    [rootId, form, tonicMidi, compositionSeed, variationSeed],
+    () => coverArtDesign({ rootId, form, tonicMidi, compositionSeed, variationSeed }, colors),
+    [rootId, form, tonicMidi, compositionSeed, variationSeed, colors],
   );
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const devicePixelRatio = useDevicePixelRatio();

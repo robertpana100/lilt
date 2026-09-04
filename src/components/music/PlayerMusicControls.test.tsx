@@ -25,18 +25,18 @@ describe("Lilt studio", () => {
     expect(screen.getByRole("progressbar", { name: "Track progress" })).toBeTruthy();
     expect((screen.getByRole("button", { name: "Next song" }) as HTMLButtonElement).disabled).toBe(true);
   });
-  test("locks composition until playback and manual direction are enabled", async () => {
+  test("shows composition controls while manual editing is disabled", async () => {
     await renderStudio();
-    expect((screen.getByRole("combobox", { name: "Music theme" }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByLabelText("Master seed").closest("fieldset") as HTMLFieldSetElement).disabled).toBe(true);
     act(() => {
       setMusicEnabled(true);
       setMusicControlMode("override");
     });
-    expect((screen.getByRole("combobox", { name: "Music theme" }) as HTMLButtonElement).disabled).toBe(false);
+    expect((screen.getByRole("combobox", { name: "Music root" }) as HTMLButtonElement).disabled).toBe(false);
   });
-  test("opens the library and persists the system-media preference", async () => {
+  test("shows the library and persists the system-media preference", async () => {
     await renderStudio();
-    fireEvent.click(screen.getByRole("tab", { name: "Your library" }));
+    expect(screen.queryByRole("tab")).toBeNull();
     expect(screen.getByRole("searchbox", { name: "Search music library" })).toBeTruthy();
     const controls = screen.getByRole("switch", { name: "Show music in system controls" });
     fireEvent.click(controls);

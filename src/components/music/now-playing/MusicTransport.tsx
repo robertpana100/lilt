@@ -1,11 +1,9 @@
 import { getMusicApplication } from "@/audio/application";
 import { notify } from "@/app/notifications/store";
-import { IconPlayerPause, IconPlayerPlay, IconPlayerTrackNext } from "@tabler/icons-react";
+import { IconPlayerPause, IconPlayerPlay, IconPlayerTrackNext, IconVolume } from "@tabler/icons-react";
 import { useMusicRuntime, useMusicSessionController } from "@/audio/playback/react";
 import { setMusicEnabled, setMusicVolume } from "@/audio/musicSettings";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Slider, sliderValue } from "@/components/ui/slider";
 
 /**
@@ -29,15 +27,20 @@ export function MusicTransport({ enabled, volume }: { enabled: boolean; volume: 
     }
   };
   return (
-    <div className="grid items-center gap-3 sm:grid-cols-[auto_1fr]">
-      <div className="flex gap-1.5">
-        <Button variant="default" className="sm:min-w-32" onClick={() => void togglePlayback()}>
+    <div className="transport-controls">
+      <div className="transport-buttons">
+        <Button
+          variant="default"
+          size="icon-lg"
+          aria-label={playing ? "Pause music" : "Play music"}
+          title={playing ? "Pause" : "Play"}
+          onClick={() => void togglePlayback()}
+        >
           {playing ? <IconPlayerPause /> : <IconPlayerPlay />}
-          {playing ? "Pause music" : "Play music"}
         </Button>
         <Button
-          size="icon"
-          variant="outline"
+          size="icon-lg"
+          variant="ghost"
           aria-label="Next song"
           title="Next song"
           disabled={!enabled}
@@ -46,11 +49,8 @@ export function MusicTransport({ enabled, volume }: { enabled: boolean; volume: 
           <IconPlayerTrackNext />
         </Button>
       </div>
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <Label>Music volume</Label>
-          <Badge variant="outline">{Math.round(volume * 100)}%</Badge>
-        </div>
+      <div className="volume-control">
+        <IconVolume aria-hidden="true" />
         <Slider
           aria-label="Music volume"
           min={0}
@@ -59,6 +59,7 @@ export function MusicTransport({ enabled, volume }: { enabled: boolean; volume: 
           value={[volume * 100]}
           onValueChange={(value) => setMusicVolume(sliderValue(value) / 100)}
         />
+        <span>{Math.round(volume * 100)}%</span>
       </div>
     </div>
   );

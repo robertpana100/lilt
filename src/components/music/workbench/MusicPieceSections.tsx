@@ -8,6 +8,7 @@ import { LuteLineup } from "@/components/music/LuteLineup";
 import { PercentSlider } from "@/components/music/PercentSlider";
 import { durationLabel } from "@/components/music/format";
 import { ControlSection } from "./ControlSection";
+import { MusicPlaybackSection } from "./MusicPlaybackSection";
 import { midiLabel } from "./music-labels";
 
 const MUSIC_ROOT_SELECT_ITEMS = MUSIC_ROOTS.map((root) => ({ value: root.id, label: `${root.name} · ${root.theme}` }));
@@ -19,41 +20,44 @@ export function MusicPieceSections() {
   const root = getMusicRoot(session.rootId);
   return (
     <>
-      <ControlSection
-        id="root"
-        aside={
-          <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => controller.randomize()}>
-            <IconDice5 />
-            Random root
-          </Button>
-        }
-      >
-        <Select
-          items={MUSIC_ROOT_SELECT_ITEMS}
-          value={session.rootId}
-          onValueChange={(value) => value && controller.setRoot(value as (typeof MUSIC_ROOTS)[number]["id"])}
+      <div className="score-column">
+        <ControlSection
+          id="root"
+          aside={
+            <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => controller.randomize()}>
+              <IconDice5 />
+              Random root
+            </Button>
+          }
         >
-          <SelectTrigger aria-label="Music root" className="h-9 w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {MUSIC_ROOTS.map((entry) => (
-              <SelectItem key={entry.id} value={entry.id}>
-                {entry.name} · {entry.theme}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <div className="rounded-lg bg-muted/50 p-3">
-          <div className="flex flex-wrap gap-1.5">
-            <Badge>{root.theme}</Badge>
-            <Badge variant="outline">{root.mode}</Badge>
-            <Badge variant="outline">{root.meter}</Badge>
-            <Badge variant="outline">{runtime.status}</Badge>
+          <Select
+            items={MUSIC_ROOT_SELECT_ITEMS}
+            value={session.rootId}
+            onValueChange={(value) => value && controller.setRoot(value as (typeof MUSIC_ROOTS)[number]["id"])}
+          >
+            <SelectTrigger aria-label="Music root" className="h-9 w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {MUSIC_ROOTS.map((entry) => (
+                <SelectItem key={entry.id} value={entry.id}>
+                  {entry.name} · {entry.theme}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="rounded-lg bg-muted/50 p-3">
+            <div className="flex flex-wrap gap-1.5">
+              <Badge>{root.theme}</Badge>
+              <Badge variant="outline">{root.mode}</Badge>
+              <Badge variant="outline">{root.meter}</Badge>
+              <Badge variant="outline">{runtime.status}</Badge>
+            </div>
           </div>
-        </div>
-      </ControlSection>
+        </ControlSection>
 
+        <MusicPlaybackSection />
+      </div>
       <ControlSection id="now-playing">
         <p className="text-xs text-muted-foreground">
           Piece {runtime.pieceIndex + 1} · section {runtime.sectionId ?? "—"} · {durationLabel(runtime.durationSeconds)}

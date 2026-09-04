@@ -50,20 +50,25 @@ belong to the browser origin, so ports 5174 (development) and 4174 (preview) hav
 separate libraries. No server persistence or cloud sync is provided.
 
 The detailed controls are available in production under Sound desk, with their
-own section metadata and no debug-panel or game provider dependency. The desk
-loads on demand. Notifications visibly report failed playback, storage failures,
-favourite changes, and exports.
+own section metadata and no debug-panel or game provider dependency. The controls
+and both library collections share one page. Notifications report
+failed playback and storage failures. Appearance supports light, dark, and system
+settings, including the cover art. Product slogans and explanatory UI prose have
+been removed.
 
 ## Verification
 
-`npm run verify` passes: typechecking, 244 tests across 45 files, lint, formatting,
+`npm run verify` passes: typechecking, 249 tests across 46 files, lint, formatting,
 production build, and `git diff --check`. New integration regressions cover
 manual control, persisted playback, error feedback, media-artwork subscription
-and cleanup, preference isolation, and real composition/mute/effect commands.
+and cleanup, preference isolation, appearance persistence/system changes, and real
+composition/mute/effect commands.
 
-Browser checks covered initial playback, advancing progress, recording history,
-favouriting and replay, MIDI export feedback, desktop and 390 px mobile layouts,
-production playback, and lazy Sound desk loading.
+Initial extraction browser checks covered playback, recording history, favouriting,
+replay, and MIDI export. After the layout revision, browser checks covered the
+single-page controls and collections, appearance persistence, OS appearance changes,
+continued playback across theme changes, and widths of 320, 390, 768, 1024, and
+1440 px with no horizontal overflow.
 The production console contained no warnings or errors during those checks.
 Hardware media behavior is covered through the adapter tests; no physical
 keyboard media-key test was performed.

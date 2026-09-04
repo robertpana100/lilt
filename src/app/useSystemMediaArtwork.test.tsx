@@ -1,3 +1,4 @@
+import { getAppearanceStore } from "@/appearance/browser";
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
@@ -17,6 +18,7 @@ import { COVER_COLORS } from "@/appearance/cover-colors";
 import { useSystemMediaArtwork } from "./useSystemMediaArtwork";
 describe("standalone media artwork", () => {
   beforeEach(() => {
+    getAppearanceStore().setPreference("light");
     vi.clearAllMocks();
     mocks.publish = null;
     mocks.peek.mockReturnValue(null);
@@ -37,7 +39,7 @@ describe("standalone media artwork", () => {
     const take = { name: "A small song" };
     mocks.peek.mockReturnValue(take);
     const hook = renderHook(({ enabled }) => useSystemMediaArtwork(enabled), { initialProps: { enabled: true } });
-    expect(mocks.render).toHaveBeenCalledWith(take, COVER_COLORS);
+    expect(mocks.render).toHaveBeenCalledWith(take, COVER_COLORS.light);
     expect(mocks.setArtwork).toHaveBeenCalledWith("data:image/png;base64,one");
     act(() => mocks.publish?.());
     expect(mocks.setArtwork).toHaveBeenCalledOnce();
@@ -47,5 +49,15 @@ describe("standalone media artwork", () => {
     hook.rerender({ enabled: false });
     expect(mocks.unsubscribe).toHaveBeenCalledOnce();
     expect(mocks.subscribe).toHaveBeenCalledOnce();
+  });
+  test("updates artwork colors when the appearance changes", () => {
+    const take = { name: "A small song" };
+    mocks.peek.mockReturnValue(take);
+    mocks.render.mockImplementation((_take, colors) => ({ key: colors.background, url: colors.background }));
+    renderHook(() => useSystemMediaArtwork(true));
+    act(() => getAppearanceStore().setPreference("dark"));
+    expect(mocks.render).toHaveBeenLastCalledWith(take, COVER_COLORS.dark);
+    expect(mocks.setArtwork).toHaveBeenLastCalledWith(COVER_COLORS.dark.background);
+    expect(mocks.unsubscribe).toHaveBeenCalledOnce();
   });
 });

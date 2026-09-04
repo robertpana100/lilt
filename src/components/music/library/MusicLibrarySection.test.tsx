@@ -1,6 +1,6 @@
 import "@/test/register-dom";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { generateMusicPiece, type MusicGeneratorConfig } from "@/audio/composition/generator";
 import {
   getMusicLibrary,
@@ -63,15 +63,15 @@ describe("music library section", () => {
     expect(screen.queryByText("Roadwarden’s Lay")).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "Add The Áshen Hearth to favourites" }));
-    fireEvent.click(screen.getByRole("tab", { name: /Favourites 1/ }));
-    expect(screen.getByText("The Áshen Hearth")).toBeTruthy();
+    const favourites = within(screen.getByRole("region", { name: "Favourites" }));
+    expect(favourites.getByText("The Áshen Hearth")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Play The Áshen Hearth" })).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Play favourites in order" }));
     expect(getMusicSettings().favoritesOrder).toBe("ordered");
 
-    fireEvent.click(screen.getByRole("button", { name: "Remove The Áshen Hearth from favourites" }));
-    expect(screen.getByText("No matching songs")).toBeTruthy();
+    fireEvent.click(favourites.getByRole("button", { name: "Remove The Áshen Hearth from favourites" }));
+    expect(favourites.getByText("No matching songs")).toBeTruthy();
   });
 
   test("keeps the shelf to its own height and scrolls it there", () => {
