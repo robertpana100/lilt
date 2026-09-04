@@ -101,9 +101,7 @@ function strum(
  * between a verse and what follows. Its events form their own line and may
  * overlap the lead lute.
  *
- * Bar 0 of every refrain and postlude always sounds, whatever the density —
- * the guarantee `describeMusicPiece` leans on to report the rhythm lute
- * without composing.
+ * Bar 0 of every refrain and postlude always sounds, whatever the density.
  */
 export function createRhythmLutePart(
   root: MusicRoot,

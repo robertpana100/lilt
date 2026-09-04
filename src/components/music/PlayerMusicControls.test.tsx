@@ -2,7 +2,6 @@ import "@/test/register-dom";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { getMusicSettings, setMusicEnabled, setMusicControlMode } from "@/audio/musicSettings";
-import { resetMusicLibraryForTests } from "@/audio/musicLibrary";
 import { reloadMusicSettingsFromStorage } from "@/test/music-settings";
 import { PlayerMusicControls } from "./PlayerMusicControls";
 
@@ -10,7 +9,6 @@ describe("Lilt studio", () => {
   beforeEach(() => {
     localStorage.clear();
     reloadMusicSettingsFromStorage();
-    resetMusicLibraryForTests();
   });
   afterEach(cleanup);
   async function renderStudio() {
@@ -24,6 +22,9 @@ describe("Lilt studio", () => {
     expect(screen.getByRole("img", { name: /^Cover of / })).toBeTruthy();
     expect(screen.getByRole("progressbar", { name: "Track progress" })).toBeTruthy();
     expect((screen.getByRole("button", { name: "Next song" }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.queryByRole("searchbox")).toBeNull();
+    expect(screen.queryByText("Library")).toBeNull();
+    expect(screen.queryByRole("button", { name: /MIDI/ })).toBeNull();
   });
   test("shows composition controls while manual editing is disabled", async () => {
     await renderStudio();
@@ -34,10 +35,9 @@ describe("Lilt studio", () => {
     });
     expect((screen.getByRole("combobox", { name: "Music root" }) as HTMLButtonElement).disabled).toBe(false);
   });
-  test("shows the library and persists the system-media preference", async () => {
+  test("persists the system-media preference", async () => {
     await renderStudio();
     expect(screen.queryByRole("tab")).toBeNull();
-    expect(screen.getByRole("searchbox", { name: "Search music library" })).toBeTruthy();
     const controls = screen.getByRole("switch", { name: "Show music in system controls" });
     fireEvent.click(controls);
     expect(getMusicSettings().systemMediaControls).toBe(false);

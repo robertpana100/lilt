@@ -15,7 +15,7 @@ describe("sound desk", () => {
     render(<SoundDesk />);
     await act(async () => {});
   }
-  test("requires taking manual direction before editing an automatic or favourite programme", async () => {
+  test("requires taking manual direction before editing an automatic programme", async () => {
     await renderDesk();
     expect((screen.getByLabelText("Master seed").closest("fieldset") as HTMLFieldSetElement).disabled).toBe(true);
     fireEvent.click(screen.getByRole("button", { name: "Enable manual controls" }));
@@ -32,6 +32,22 @@ describe("sound desk", () => {
     // The real-browser check verifies visibility; here verify the named native input.
     expect(screen.getByLabelText("Studio music tempo")).toBeTruthy();
     expect(screen.getByLabelText("Music humanization")).toBeTruthy();
+  });
+  test("offers automatic and manual direction without changing the current composition", async () => {
+    await renderDesk();
+    const before = getMusicApplication().session.getState();
+
+    fireEvent.click(screen.getByRole("combobox", { name: "Music direction" }));
+    expect(screen.getAllByRole("option").map((option) => option.textContent)).toEqual(["Automatic", "Manual"]);
+    fireEvent.pointerDown(screen.getByRole("option", { name: "Manual" }), { pointerType: "mouse" });
+    fireEvent.click(screen.getByRole("option", { name: "Manual" }));
+    expect(getMusicSettings().controlMode).toBe("override");
+
+    fireEvent.click(screen.getByRole("combobox", { name: "Music direction" }));
+    fireEvent.pointerDown(screen.getByRole("option", { name: "Automatic" }), { pointerType: "mouse" });
+    fireEvent.click(screen.getByRole("option", { name: "Automatic" }));
+    expect(getMusicSettings().controlMode).toBe("auto");
+    expect(getMusicApplication().session.getState()).toBe(before);
   });
   test("controls the real mute flags, effects bypass, and paused seeking", async () => {
     setMusicControlMode("override");

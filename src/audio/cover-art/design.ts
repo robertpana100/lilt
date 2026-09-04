@@ -23,9 +23,8 @@ export type CoverArtBand = "plain" | "spoked" | "studded";
 /**
  * Everything about a take that its cover is drawn from, and nothing else.
  *
- * A sounding runtime snapshot and a saved library piece both satisfy this, which
- * is the point: the cover of what is playing and the cover on a library row come
- * from one drawing rather than from two lookalike ones.
+ * The runtime snapshot supplies the same subject to the studio and system
+ * media artwork, so both surfaces draw the same cover.
  */
 export interface CoverArtSubject {
   rootId: MusicRootId;
@@ -82,8 +81,7 @@ const RING_WEIGHTS = [0.028, 0.034, 0.042] as const;
  * Every choice comes from the piece itself, so a cover is as deterministic as
  * the score: the metre divides the rose, the form chooses the central device,
  * the tonic turns it, the root decides how its band is treated, and the
- * composition seed settles the weight of the line. Replay a saved take and its
- * cover returns with it.
+ * composition seed settles the weight of the line.
  *
  * Colour is supplied by the host, independently of the composition.
  */

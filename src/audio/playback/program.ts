@@ -1,8 +1,7 @@
 import { generateMusicPiece, generateNextMusicPiece, type MusicEvent, type MusicPiece } from "../composition/generator";
 import { nameMusicPiece } from "../composition/names";
-import { generateReplayPiece, type MusicReplayTrack } from "./replay";
 import { indexMusicEvents, type IndexedMusicEvents } from "./transport";
-import type { MusicEngineConfig, MusicReplaySequence } from "./types";
+import type { MusicEngineConfig } from "./types";
 
 /**
  * What follows the piece that just finished. Whatever it is, the program has
@@ -11,10 +10,8 @@ import type { MusicEngineConfig, MusicReplaySequence } from "./types";
 export type MusicProgramAdvance =
   /** The generator produced the next piece. */
   | { kind: "piece" }
-  /** A saved take was loaded. */
-  | { kind: "replay" }
-  /** Nothing follows; the sequence's completion callback, if it had one. */
-  | { kind: "complete"; onComplete: (() => void) | undefined };
+  /** Nothing follows. */
+  | { kind: "complete" };
 
 /**
  * Chooses the configuration each newly generated piece is composed from, which
@@ -29,8 +26,7 @@ const KEEP_CONFIG: MusicPieceDirector = (config) => config;
  * The repertoire. It owns the current configuration and which piece is
  * current — every transition that changes what plays swaps them together, so
  * the score and the config it was composed from cannot drift apart — plus the
- * piece's events indexed by pulse, and the decision about what plays next,
- * whether that comes from the generator or from a saved replay sequence.
+ * piece's events indexed by pulse, and the decision about what plays next.
  */
 export class MusicProgram {
   private currentConfig: MusicEngineConfig;
@@ -38,9 +34,6 @@ export class MusicProgram {
   private events: IndexedMusicEvents | null = null;
   private sectionStarts: Map<number, MusicPiece["sections"][number]> | null = null;
   private index: number;
-  private sequence: MusicReplaySequence | null = null;
-  private trackId: string | null = null;
-  private trackName: string | null = null;
   private director: MusicPieceDirector = KEEP_CONFIG;
 
   /**
@@ -72,13 +65,8 @@ export class MusicProgram {
     return this.index;
   }
 
-  /** A saved take keeps the name it was saved under; anything else is named. */
   get name(): string {
-    return this.trackName ?? nameMusicPiece(this.piece);
-  }
-
-  get isReplaying(): boolean {
-    return this.sequence !== null;
+    return nameMusicPiece(this.piece);
   }
 
   eventsAt(pulse: number): Array<{ event: MusicEvent; index: number }> {
@@ -116,52 +104,18 @@ export class MusicProgram {
   }
 
   /**
-   * Compose a fresh piece at the given index, leaving any replay behind.
+   * Compose a fresh piece at the given index.
    * Before anything has read a piece the composition is deferred to the first
    * read, preserving the constructor's laziness across reconfigurations.
    */
   regenerate(config: MusicEngineConfig, pieceIndex: number): void {
-    this.trackId = null;
-    this.trackName = null;
     this.index = pieceIndex;
     this.currentConfig = { ...config, pieceIndex };
     if (this.currentPiece !== null) this.setPiece(generateMusicPiece(this.currentConfig));
   }
 
-  setReplaySequence(sequence: MusicReplaySequence | null): void {
-    this.sequence = sequence;
-  }
-
   setDirector(director: MusicPieceDirector | null): void {
     this.director = director ?? KEEP_CONFIG;
-  }
-
-  /** Drop the sequence and the identity of the take that was playing. */
-  clearReplay(): void {
-    this.sequence = null;
-    this.trackId = null;
-    this.trackName = null;
-  }
-
-  /**
-   * Drop the replay and hand back its completion callback. A reconfiguration
-   * that replaces the score ends the sequence just as finishing it would, so
-   * whoever queued it (favourites) must be told it is over.
-   */
-  endReplay(): (() => void) | undefined {
-    const onComplete = this.sequence?.onComplete;
-    this.clearReplay();
-    return onComplete;
-  }
-
-  /** Loads a saved take and adopts the config it was recorded with. */
-  loadReplayTrack(track: MusicReplayTrack): void {
-    this.setPiece(generateReplayPiece(track));
-    this.index = this.piece.pieceIndex;
-    this.trackId = track.id;
-    this.trackName = track.name;
-    // A lone take must not roll on into the generated repertoire.
-    this.currentConfig = { ...track.recipe, autoAdvance: this.sequence !== null };
   }
 
   /**
@@ -171,18 +125,8 @@ export class MusicProgram {
    * generated piece it lands on.
    */
   advance(intent: "auto" | "skip"): MusicProgramAdvance {
-    if (this.sequence) {
-      const nextTrack = this.sequence.next(this.trackId);
-      if (nextTrack) {
-        this.loadReplayTrack(nextTrack);
-        return { kind: "replay" };
-      }
-      const { onComplete } = this.sequence;
-      this.sequence = null;
-      return { kind: "complete", onComplete };
-    }
     const requested = intent === "skip" ? { ...this.currentConfig, autoAdvance: true } : this.currentConfig;
-    if (!requested.autoAdvance) return { kind: "complete", onComplete: undefined };
+    if (!requested.autoAdvance) return { kind: "complete" };
     // Asked before the generator runs, and only when a piece will actually
     // follow: a director changes what is playing, so it must not fire on a
     // scheduler tick that turns out to have nothing left to play.
@@ -193,7 +137,7 @@ export class MusicProgram {
     // method's to keep, so it is restored before the generator asks.
     const composed = intent === "skip" ? { ...directed, autoAdvance: true } : directed;
     const nextPiece = generateNextMusicPiece(composed, this.index);
-    if (!nextPiece) return { kind: "complete", onComplete: undefined };
+    if (!nextPiece) return { kind: "complete" };
     this.index = nextPiece.pieceIndex;
     // A generated piece must not inherit the true an explicit skip passed in.
     this.currentConfig = intent === "skip" ? { ...directed, autoAdvance: this.currentConfig.autoAdvance } : directed;

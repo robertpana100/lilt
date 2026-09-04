@@ -69,7 +69,7 @@ function pickSwitches(random: () => number): MusicEffectsSwitches {
  * further than the listener set it, then the whole config is clamped back
  * inside its legal ranges. The same performance seed always produces the
  * same variation, and the base config is never mutated — saved settings and
- * replay recipes keep what the user set.
+ * session settings keep what the user set.
  */
 export function varyMusicEffects(
   base: Readonly<MusicEffectsConfig>,

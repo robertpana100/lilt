@@ -12,8 +12,6 @@ function fakePlayback(): MusicPlaybackPort {
     configure: vi.fn(),
     skipToNextPiece: vi.fn(),
     seek: vi.fn(),
-    playReplayTrack: vi.fn(),
-    clearReplaySequence: vi.fn(),
     setPieceDirector: vi.fn(),
     subscribeRuntime: vi.fn(() => () => undefined),
     getRuntimeSnapshot: vi.fn(() => ({ pieceIndex: 0 }) as MusicRuntimeSnapshot),

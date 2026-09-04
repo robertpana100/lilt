@@ -1,6 +1,4 @@
-import { setMusicDirection } from "@/audio/playback/favorites";
-import { useMusicSettings } from "@/audio/musicSettings";
-import { useMusicLibrary } from "@/audio/musicLibrary";
+import { setMusicControlMode, useMusicSettings } from "@/audio/musicSettings";
 import { Button } from "@/components/ui/button";
 import { MusicDirectionControls } from "../repertoire/MusicDirectionControls";
 import { MusicPieceSections } from "./MusicPieceSections";
@@ -9,7 +7,6 @@ import { MusicArrangementSections } from "./MusicArrangementSections";
 import { MusicEffectsSection } from "./MusicEffectsSection";
 export default function SoundDesk() {
   const settings = useMusicSettings();
-  const library = useMusicLibrary();
   const manual = settings.controlMode === "override";
   return (
     <section className="workbench" aria-labelledby="sound-desk-title">
@@ -18,9 +15,9 @@ export default function SoundDesk() {
           Sound desk
         </h2>
         <div className="direction-controls">
-          <MusicDirectionControls settings={settings} favoriteCount={library.favorites.length} />
+          <MusicDirectionControls settings={settings} />
           {!manual && (
-            <Button size="sm" onClick={() => setMusicDirection("override")}>
+            <Button size="sm" onClick={() => setMusicControlMode("override")}>
               Enable manual controls
             </Button>
           )}

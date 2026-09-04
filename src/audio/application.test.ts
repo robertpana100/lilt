@@ -11,7 +11,6 @@ const SETTINGS: MusicSettings = {
   enabled: true,
   volume: 0.4,
   controlMode: "auto",
-  favoritesOrder: "shuffle",
   systemMediaControls: true,
 };
 
@@ -24,8 +23,6 @@ function fakePlayback() {
     configure: vi.fn(),
     skipToNextPiece: vi.fn(),
     seek: vi.fn(),
-    playReplayTrack: vi.fn(),
-    clearReplaySequence: vi.fn(),
     setPieceDirector: vi.fn((next) => {
       director = next;
     }),
@@ -43,7 +40,6 @@ function fakePlayback() {
 describe("music application ownership", () => {
   test("constructs deterministically without attaching external behavior", () => {
     const host = fakePlayback();
-    const observePlayback = vi.fn(() => vi.fn());
     const subscribeSettings = vi.fn(() => vi.fn());
     const application = new MusicApplication({
       playback: host.engine,
@@ -51,19 +47,16 @@ describe("music application ownership", () => {
       randomSeed: () => 42,
       getSettings: () => SETTINGS,
       subscribeSettings,
-      observePlayback,
     });
 
     expect(application.session.getState()).toMatchObject({ rootId: "hearth", masterSeed: 42 });
     expect(host.engine.start).not.toHaveBeenCalled();
     expect(host.engine.setPieceDirector).not.toHaveBeenCalled();
-    expect(observePlayback).not.toHaveBeenCalled();
     expect(subscribeSettings).not.toHaveBeenCalled();
   });
 
-  test("owns settings, history, director, and engine for exactly its attached lifetime", async () => {
+  test("owns settings, director, and engine for exactly its attached lifetime", async () => {
     const host = fakePlayback();
-    const detachHistory = vi.fn();
     const detachSettings = vi.fn();
     let settingsListener: () => void = () => undefined;
     const application = new MusicApplication({
@@ -74,7 +67,6 @@ describe("music application ownership", () => {
         settingsListener = listener;
         return detachSettings;
       },
-      observePlayback: () => detachHistory,
     });
 
     const detachFirst = application.attach();
@@ -93,7 +85,6 @@ describe("music application ownership", () => {
     expect(host.engine.dispose).not.toHaveBeenCalled();
     detachSecond();
 
-    expect(detachHistory).toHaveBeenCalledOnce();
     expect(detachSettings).toHaveBeenCalledOnce();
     expect(host.getDirector()).toBeNull();
     expect(host.engine.dispose).toHaveBeenCalledOnce();
@@ -107,11 +98,6 @@ describe("music application ownership", () => {
       initialState: createInitialMusicSessionState({ pick: () => 0, randomSeed: () => 11 }),
       getSettings: () => SETTINGS,
       subscribeSettings: () => {
-        const detach = vi.fn();
-        detachObservers.push(detach);
-        return detach;
-      },
-      observePlayback: () => {
         const detach = vi.fn();
         detachObservers.push(detach);
         return detach;
@@ -130,7 +116,7 @@ describe("music application ownership", () => {
     expect(host.engine.start).toHaveBeenCalledTimes(2);
     expect(host.engine.dispose).toHaveBeenCalledTimes(2);
     expect(host.engine.setPieceDirector).toHaveBeenCalledTimes(4);
-    expect(detachObservers).toHaveLength(4);
+    expect(detachObservers).toHaveLength(2);
     expect(detachObservers.every((detach) => detach.mock.calls.length === 1)).toBe(true);
   });
 
@@ -223,7 +209,6 @@ describe("music application ownership", () => {
       playback: host.engine,
       getSettings: () => settings,
       subscribeSettings: () => () => undefined,
-      observePlayback: () => () => undefined,
     });
 
     expect(await application.unlock()).toBe(false);

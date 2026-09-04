@@ -5,6 +5,10 @@ Lilt is an independent repository extracted from The City Remembers on
 local-storage namespace, artwork palette, and application entry point.
 There are no package links, source symlinks, or imports into the game repository.
 
+The library (history, favourites, search, and saved-track replay) and MIDI export
+were subsequently removed. The ownership table below reflects the current app;
+the extraction verification records the features present at that time.
+
 ## Boundaries reviewed
 
 The original music feature lived in `packages/game-client/src/audio`, the music
@@ -17,14 +21,12 @@ requirement in the music engine. Web and desktop consumed the shared client.
 | --- | --- |
 | Composition, forms, seeds, arrangement, repertoire | `src/audio/composition` |
 | Instrument DSP, render worker, audio worklet, effects | `src/audio/synthesis` |
-| Scheduling, transitions, replay, transport, editable session | `src/audio/playback` |
+| Scheduling, transitions, transport, editable session | `src/audio/playback` |
 | Browser lifecycle and preferences | `src/audio/ProceduralMusic.tsx`, `src/audio/musicSettings.ts` |
-| Played history, favourite recipes, search, persistence | `src/audio/library` |
-| MIDI bytes and download | `src/audio/export` |
 | Deterministic cover design and drawing | `src/audio/cover-art` |
 | OS media metadata, presence, and transport | `src/audio/system-media` |
 | App colors, artwork subscription, feedback | `src/appearance`, `src/app` |
-| Listening, repertoire, library, sound desk | `src/components/music` |
+| Listening, repertoire, sound desk | `src/components/music` |
 
 Tauri's game windows, tray, save repository, game loop, companion view, and build
 profiles are outside this browser app. Lilt retains the browser Media Session
@@ -33,32 +35,32 @@ A native desktop wrapper would be a separate addition.
 
 ## Preserved and changed
 
-Composition and DSP are preserved, including all original 227 audio tests across
-39 files. No tempo ranges, musical probabilities, synthesis parameters, replay
+At extraction, composition and DSP were preserved, including all original 227
+audio tests across 39 files. No tempo ranges, musical probabilities, synthesis parameters, replay
 formats, or library limits were rebalanced during extraction. The existing lute
 ensemble remains the implemented instrument system; the broader name does not
 imply other instruments have been added.
 
-The app and media artist are Lilt. Browser settings, library storage, worklet
-registration, and unnamed MIDI downloads use the Lilt namespace. Cover art now
+The app and media artist are Lilt. Browser settings and worklet registration
+use the Lilt namespace. Cover art now
 receives colors as an input instead of importing the game's theme. Fresh visits
 wait for an explicit Play action. Later visits retain the playback preference
 and remain subject to browser autoplay rules.
 
-Game saves and music libraries are not migrated or read. Settings and favourites
-belong to the browser origin, so ports 5174 (development) and 4174 (preview) have
-separate libraries. No server persistence or cloud sync is provided.
+Game saves and music libraries are not migrated or read. Browser preferences
+belong to the origin, so ports 5174 (development) and 4174 (preview) have separate
+settings. Existing Lilt library data is no longer read or written. Stored
+favourites playback preferences fall back to Automatic.
 
 The detailed controls are available in production under Sound desk, with their
 own section metadata and no debug-panel or game provider dependency. The controls
-and both library collections share one page. Notifications report
-failed playback and storage failures. Appearance supports light, dark, and system
+share one page. Notifications report failed playback. Appearance supports light, dark, and system
 settings, including the cover art. Product slogans and explanatory UI prose have
 been removed.
 
 ## Verification
 
-`npm run verify` passes: typechecking, 249 tests across 46 files, lint, formatting,
+At extraction, `npm run verify` passed: typechecking, 249 tests across 46 files, lint, formatting,
 production build, and `git diff --check`. New integration regressions cover
 manual control, persisted playback, error feedback, media-artwork subscription
 and cleanup, preference isolation, appearance persistence/system changes, and real

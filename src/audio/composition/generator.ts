@@ -1,12 +1,4 @@
-import {
-  MUSIC_PARTS,
-  PULSES_PER_QUARTER,
-  getMusicRoot,
-  type MusicPart,
-  type MusicPieceForm,
-  type MusicRoot,
-  type MusicRootId,
-} from "./roots";
+import { PULSES_PER_QUARTER, getMusicRoot, type MusicPieceForm, type MusicRoot } from "./roots";
 import { createSectionPlan } from "./form";
 import { cadenceFor, createPhrase } from "./phrase";
 import { clamp } from "./pitch";
@@ -41,14 +33,12 @@ export { mixMusicSeed } from "./random";
 export { getPerformanceVariation } from "./performance";
 
 /** A piece's configuration without the repertoire's advance policy, which
- * composing (or describing) a single piece never reads. */
-export type MusicPieceConfig = Omit<MusicGeneratorConfig, "autoAdvance">;
+ * composing a single piece never reads. */
+type MusicPieceConfig = Omit<MusicGeneratorConfig, "autoAdvance">;
 
 /**
  * The head of composition: everything a piece determines before a single
- * phrase or event is written. Shared by `generateMusicPiece` and
- * `describeMusicPiece` so the cheap description can never drift from the
- * composed piece; the random streams are returned mid-flight because
+ * phrase or event is written. The random streams are returned mid-flight because
  * composition continues drawing from them in this exact order.
  */
 interface MusicPiecePlan {
@@ -110,63 +100,6 @@ function planMusicPiece(config: MusicPieceConfig): MusicPiecePlan {
     pulseSeconds,
     sections,
     totalPulses,
-  };
-}
-
-/**
- * What a piece is, without its music: identity, form, tempo, length, and the
- * parts its sections will write events for. Cheap enough to compute for every
- * row of a saved library, where composing phrases and events for each entry
- * is not.
- */
-export interface MusicPieceDescription {
-  rootId: MusicRootId;
-  pieceIndex: number;
-  compositionSeed: number;
-  variationSeed: number;
-  performanceSeed: number;
-  tonicMidi: number;
-  form: MusicPieceForm;
-  bpm: number;
-  durationSeconds: number;
-  /** The parts that will carry events, in `MUSIC_PARTS` order, mutes ignored. */
-  soundingParts: readonly MusicPart[];
-}
-
-/** Describe the piece a config would compose, without composing it. */
-export function describeMusicPiece(config: MusicPieceConfig): MusicPieceDescription {
-  const plan = planMusicPiece(config);
-  const sounding = new Set<MusicPart>(plan.sections.flatMap((section) => section.activeParts));
-  // The prelude's intonation guarantees the second lute and any verse
-  // guarantees the lead, so the plan alone names both sounding parts.
-  return {
-    rootId: config.rootId,
-    pieceIndex: config.pieceIndex,
-    compositionSeed: plan.compositionSeed,
-    variationSeed: plan.variationSeed,
-    performanceSeed: plan.performanceSeed,
-    tonicMidi: plan.tonicMidi,
-    form: plan.form,
-    bpm: config.bpm,
-    durationSeconds: plan.totalPulses * plan.pulseSeconds,
-    soundingParts: MUSIC_PARTS.filter((part) => sounding.has(part)),
-  };
-}
-
-/** The same description, read off a piece that is already composed. */
-export function musicPieceDescription(piece: MusicPiece): MusicPieceDescription {
-  const sounding = new Set(piece.events.map((event) => event.part));
-  return {
-    rootId: piece.rootId,
-    pieceIndex: piece.pieceIndex,
-    compositionSeed: piece.compositionSeed,
-    variationSeed: piece.variationSeed,
-    performanceSeed: piece.performanceSeed,
-    tonicMidi: piece.tonicMidi,
-    form: piece.form,
-    bpm: piece.bpm,
-    durationSeconds: piece.durationSeconds,
-    soundingParts: MUSIC_PARTS.filter((part) => sounding.has(part)),
   };
 }
 

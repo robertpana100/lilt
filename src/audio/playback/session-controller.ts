@@ -6,18 +6,16 @@ import type { MusicSettings } from "../musicSettings";
 import type { MusicEffectId, MusicEffectsConfig } from "../synthesis/effects/config";
 import { directNextMusicPiece } from "./direction";
 import type { MusicPlaybackPort } from "./port";
-import type { MusicReplayTrack } from "./replay";
 import { MusicSessionLifecycle, type MusicSessionLifecycleOptions } from "./session-lifecycle";
 import {
   cloneMusicSessionState,
   createBrowserRandomSeed,
-  musicSessionStateFromReplay,
   reduceMusicSessionState,
   updateMusicSessionEffect,
   type MusicSessionAction,
   type MusicSessionState,
 } from "./session-state";
-import type { MusicReplaySequence, MusicRuntimeSnapshot } from "./types";
+import type { MusicRuntimeSnapshot } from "./types";
 
 export interface MusicSessionOptions extends MusicSessionLifecycleOptions {
   getControlMode: () => MusicSettings["controlMode"];
@@ -81,29 +79,12 @@ export class MusicSession {
     this.update({ type: "set-root", rootId });
   }
 
-  playReplayTrack(track: MusicReplayTrack, sequence: MusicReplaySequence): void {
-    const wrappedSequence: MusicReplaySequence = {
-      next: (currentTrackId) => {
-        const next = sequence.next(currentTrackId);
-        if (next) this.replaceSnapshot(musicSessionStateFromReplay(next));
-        return next;
-      },
-      onComplete: sequence.onComplete,
-    };
-    this.replaceSnapshot(musicSessionStateFromReplay(track));
-    this.playback.playReplayTrack(track, wrappedSequence);
-  }
-
   skipToNextPiece(): void {
     this.playback.skipToNextPiece();
   }
 
   seek(positionSeconds: number): void {
     this.playback.seek(positionSeconds);
-  }
-
-  clearReplaySequence(): void {
-    this.playback.clearReplaySequence();
   }
 
   directNextPiece = (): MusicSessionState => {

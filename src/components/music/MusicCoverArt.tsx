@@ -32,11 +32,8 @@ interface MusicCoverArtProps {
 /**
  * A take's cover, drawn here rather than fetched.
  *
- * The studio draws straight onto a canvas instead of going through an image
- * file: a library page can hold twenty-five covers, and twenty-five encoded PNGs
- * is a lot of work for pictures that only ever appear in this page. The
- * operating system's panel is the one caller that needs a URL, and it has its
- * own path for that.
+ * The studio draws directly onto a canvas. The operating system's panel
+ * needs an image URL and has its own rendering path.
  */
 export function MusicCoverArt({ subject, size = 56, label = "Cover art" }: MusicCoverArtProps) {
   const { resolved } = useAppearance();

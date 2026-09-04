@@ -3,8 +3,7 @@ import { useSyncExternalStore } from "react";
 export interface MusicSettings {
   enabled: boolean;
   volume: number;
-  controlMode: "auto" | "override" | "favorites";
-  favoritesOrder: "shuffle" | "ordered";
+  controlMode: "auto" | "override";
   /**
    * Whether the score appears in the operating system's now-playing surface and
    * answers the hardware media keys. Those keys are shared with every other
@@ -18,7 +17,6 @@ export const DEFAULT_MUSIC_SETTINGS: MusicSettings = {
   enabled: false,
   volume: 0.35,
   controlMode: "auto",
-  favoritesOrder: "shuffle",
   systemMediaControls: true,
 };
 const listeners = new Set<() => void>();
@@ -34,9 +32,7 @@ function loadSettings(): MusicSettings {
       enabled: typeof stored?.enabled === "boolean" ? stored.enabled : DEFAULT_MUSIC_SETTINGS.enabled,
       volume:
         typeof stored?.volume === "number" ? Math.min(1, Math.max(0, stored.volume)) : DEFAULT_MUSIC_SETTINGS.volume,
-      controlMode:
-        stored?.controlMode === "override" || stored?.controlMode === "favorites" ? stored.controlMode : "auto",
-      favoritesOrder: stored?.favoritesOrder === "ordered" ? "ordered" : "shuffle",
+      controlMode: stored?.controlMode === "override" ? "override" : "auto",
       systemMediaControls:
         typeof stored?.systemMediaControls === "boolean"
           ? stored.systemMediaControls
@@ -88,10 +84,6 @@ export function setMusicVolume(volume: number): void {
 
 export function setMusicControlMode(controlMode: MusicSettings["controlMode"]): void {
   saveSettings({ ...loadSettings(), controlMode });
-}
-
-export function setMusicFavoritesOrder(favoritesOrder: MusicSettings["favoritesOrder"]): void {
-  saveSettings({ ...loadSettings(), favoritesOrder });
 }
 
 export function setMusicSystemMediaControls(systemMediaControls: boolean): void {

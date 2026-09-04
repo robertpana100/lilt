@@ -5,7 +5,7 @@
 `MusicApplication` is the browser composition root and lifecycle owner. It
 constructs one `MusicPlaybackPort`, implemented by `TavernMusicEngine`, and an
 editable `MusicSession` without attaching external behavior. The application
-owns settings and play-history observation, preference application, gesture
+owns settings observation, preference application, gesture
 unlock, attachment reference counting, and disposal. The mounted music host
 owns browser listeners and system-media mirroring for its lifetime.
 
@@ -16,13 +16,13 @@ director attachment and debounced engine configuration live in the focused
 through `playback/react.ts`, which provides hooks without mirroring commands.
 There is no intermediate method-for-method playback wrapper.
 
-Composition, arrangement, playback, synthesis, effects, library persistence,
-export, cover art, system media, settings, and debugging remain independently
+Composition, arrangement, playback, synthesis, effects, cover art, system media,
+settings, and debugging remain independently
 testable concerns. New consumers should import from the module that owns the
 behavior rather than reaching through the engine. Every generated performance
 recasts the rack from its own performance seed — a weighted coin picks which
 modules join the take, amounts drift in small bands, and the room only ever
-opens further — while the stored settings, the bypass, and replay recipes keep
+opens further — while the session settings and bypass keep
 exactly what the listener set. The sounding rack is published in the runtime
 snapshot, so the debug switches show what each take runs; a switch flipped
 mid-take overrides that take until the next piece.
@@ -32,8 +32,7 @@ mid-take overrides that take until the next piece.
 Composition plans a song, not a stream. `composition/form.ts` gives every
 section a role — prelude, solo verse, tutti refrain, second-lute interlude,
 postlude — plus the bridged caesura bars between them, and that plan is the
-authority for which parts sound: descriptions and library rows read it without
-composing. `composition/rhythm-lute.ts` is the arrangement engine behind the
+authority for which parts sound. `composition/rhythm-lute.ts` is the arrangement engine behind the
 roles; nothing downstream of the generator needs to know they exist.
 
 ## Procedural lute performance
@@ -58,4 +57,4 @@ output, paired courses, excitation noise, and delay lines.
 
 Instruments outside this lute arrangement are not represented. Introducing a
 new instrument is an explicit end-to-end feature across composition,
-performance, synthesis, playback, export, presentation, and verification.
+performance, synthesis, playback, presentation, and verification.

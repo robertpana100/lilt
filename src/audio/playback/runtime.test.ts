@@ -3,7 +3,6 @@ import { generateMusicPiece } from "../composition/generator";
 import { getMusicRoot, NO_MUTED_PARTS } from "../composition/roots";
 import { DEFAULT_MUSIC_EFFECTS } from "../synthesis/effects/config";
 import { musicPieceLineup } from "../composition/lineup";
-import { captureMusicReplayRecipe } from "./replay";
 import { MusicRuntimePublisher, musicPieceSnapshot } from "./runtime";
 import type { MusicEngineConfig } from "./types";
 import { DEFAULT_MUSIC_CHORDS } from "../composition/chord-config";
@@ -39,7 +38,6 @@ describe("musicPieceSnapshot", () => {
 
     expect(musicPieceSnapshot(source, "A tavern night", config(), DEFAULT_MUSIC_EFFECTS)).toEqual({
       piece: source,
-      recipe: captureMusicReplayRecipe(config(), source),
       lineup: musicPieceLineup(source, NO_MUTED_PARTS),
       soundingEffects: DEFAULT_MUSIC_EFFECTS,
       rootId: source.rootId,
@@ -140,7 +138,6 @@ describe("MusicRuntimePublisher", () => {
     publisher.publish({
       status: "playing",
       sectionId: published.sections[0]!.id,
-      pieceStartNonce: 1,
       ...musicPieceSnapshot(published, "Road night", config("road"), DEFAULT_MUSIC_EFFECTS),
     });
 
@@ -150,7 +147,6 @@ describe("MusicRuntimePublisher", () => {
       status: "playing",
       name: "Road night",
       rootId: "road",
-      pieceStartNonce: 1,
     });
     expect(publisher.get().piece).toBe(published);
     expect(composed).toBe(0);

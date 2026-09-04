@@ -147,8 +147,7 @@ function activePartsFor(role: MusicSectionRole, root: MusicRoot): readonly Music
 
 /**
  * The parts a planned section carries — and, because every active part is
- * guaranteed to write events, exactly the parts that will sound. The plan is
- * authoritative: a library row reads a lineup off it without composing. The
+ * guaranteed to write events, exactly the parts that will sound. The
  * prelude guarantees the second lute and any verse guarantees the lead, so
  * every composed piece sounds both parts.
  */

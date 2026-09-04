@@ -34,8 +34,7 @@ export function withMusicRoot(config: MusicEngineConfig, rootId: MusicRootId): M
 
 /**
  * The configuration the next generated piece is composed from. Only automatic
- * playback wanders: a player who has taken control keeps the root they chose,
- * and favorites play the takes they saved.
+ * playback wanders: a player who has taken control keeps the root they chose.
  */
 export function directNextMusicPiece(
   config: MusicEngineConfig,

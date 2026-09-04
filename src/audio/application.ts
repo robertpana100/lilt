@@ -1,4 +1,3 @@
-import { recordAudiblePieces, type ObservableMusicPlayback } from "./library/playback-observer";
 import { getMusicSettings, subscribeMusicSettings, type MusicSettings } from "./musicSettings";
 import { TavernMusicEngine } from "./playback/engine";
 import type { MusicPlaybackPort } from "./playback/port";
@@ -10,7 +9,6 @@ export interface MusicApplicationOptions {
   playback?: MusicPlaybackPort;
   getSettings?: () => MusicSettings;
   subscribeSettings?: (listener: () => void) => () => void;
-  observePlayback?: (playback: ObservableMusicPlayback) => () => void;
   pick?: () => number;
   randomSeed?: () => number;
   scheduleTimeout?: (callback: () => void, delay: number) => ReturnType<typeof setTimeout>;
@@ -19,7 +17,7 @@ export interface MusicApplicationOptions {
 
 /**
  * Application composition root for music. Construction only assembles owned
- * modules; browser listeners, history observation, and playback preferences
+ * modules; browser listeners and playback preferences
  * are attached explicitly for the lifetime of the mounted host.
  */
 export class MusicApplication {
@@ -28,15 +26,12 @@ export class MusicApplication {
 
   private readonly getSettings: () => MusicSettings;
   private readonly subscribeSettings: (listener: () => void) => () => void;
-  private readonly observePlayback: (playback: ObservableMusicPlayback) => () => void;
   private attachments = 0;
   private detachSettings: (() => void) | null = null;
-  private detachHistory: (() => void) | null = null;
 
   constructor(options: MusicApplicationOptions = {}) {
     this.getSettings = options.getSettings ?? getMusicSettings;
     this.subscribeSettings = options.subscribeSettings ?? subscribeMusicSettings;
-    this.observePlayback = options.observePlayback ?? recordAudiblePieces;
     const initialState =
       options.initialState ?? createInitialMusicSessionState({ pick: options.pick, randomSeed: options.randomSeed });
     this.playback = options.playback ?? new TavernMusicEngine({ initialConfig: initialState });
@@ -53,7 +48,6 @@ export class MusicApplication {
     this.attachments += 1;
     if (this.attachments === 1) {
       this.session.start();
-      this.detachHistory = this.observePlayback(this.playback);
       const applySettings = () => void this.applyPlaybackSettings(this.getSettings());
       this.detachSettings = this.subscribeSettings(applySettings);
       applySettings();
@@ -97,8 +91,6 @@ export class MusicApplication {
   private detachOwnedObservers(): void {
     this.detachSettings?.();
     this.detachSettings = null;
-    this.detachHistory?.();
-    this.detachHistory = null;
   }
 }
 

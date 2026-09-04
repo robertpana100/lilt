@@ -2,7 +2,6 @@ import { getMusicRoot, NO_MUTED_PARTS } from "../composition/roots";
 import { renderMusicEvent } from "../synthesis/event-renderer";
 import { DEFAULT_MUSIC_EFFECTS, normalizeMusicEffects, type MusicEffectsConfig } from "../synthesis/effects/config";
 import { varyMusicEffects } from "../synthesis/effects/variation";
-import type { MusicReplayTrack } from "./replay";
 import { MusicAudioContextOwner, type PieceActivationPlan } from "./audio-context";
 import { musicCompositionKey } from "./composition-config";
 import type { MusicPlaybackPort } from "./port";
@@ -10,7 +9,7 @@ import { MusicProgram, type MusicPieceDirector } from "./program";
 import { MusicStatusReporter } from "./reporter";
 import { MusicRuntimePublisher } from "./runtime";
 import { MusicTransport } from "./transport";
-import type { MusicEngineConfig, MusicReplaySequence, MusicRuntimeSnapshot, TavernMusicEngineOptions } from "./types";
+import type { MusicEngineConfig, MusicRuntimeSnapshot, TavernMusicEngineOptions } from "./types";
 import { DEFAULT_MUSIC_CHORDS } from "../composition/chord-config";
 import { DEFAULT_MUSIC_RHYTHM_LUTE } from "../composition/rhythm-lute-config";
 export type { MusicEngineConfig, TavernMusicEngineOptions } from "./types";
@@ -187,9 +186,6 @@ export class TavernMusicEngine implements MusicPlaybackPort {
       if (this.enabled && reschedule) this.reactivate(false);
       return;
     }
-    // Replacing the score ends a replay sequence the way finishing it would,
-    // so favourites playback resets instead of claiming a take that is gone.
-    const onReplayEnd = this.program.endReplay();
     // A composition-key change rewrites the score itself — bpm included, since
     // tempo feeds the length target — so the piece deliberately restarts from
     // its first pulse rather than resuming mid-phrase inside a different
@@ -197,12 +193,10 @@ export class TavernMusicEngine implements MusicPlaybackPort {
     this.program.regenerate(config, config.pieceIndex);
     this.transport.rewind();
     this.restartPiece();
-    if (onReplayEnd) queueMicrotask(onReplayEnd);
   }
 
   /**
-   * Leave the current piece for whatever follows it: the next take in a replay
-   * sequence, or a newly directed generated piece. The authored gap is not
+   * Leave the current piece for a newly directed generated piece. The authored gap is not
    * played, and the arriving piece crossfades over the one being left.
    *
    * An explicit skip asks for the next piece even when auto-advance is off, so
@@ -213,22 +207,10 @@ export class TavernMusicEngine implements MusicPlaybackPort {
     const advance = this.program.advance("skip");
     if (advance.kind === "complete") {
       this.reporter.complete();
-      if (advance.onComplete) queueMicrotask(advance.onComplete);
       return;
     }
     this.transport.rewind();
     this.restartPiece();
-  }
-
-  playReplayTrack(track: MusicReplayTrack, sequence: MusicReplaySequence | null = null): void {
-    this.program.setReplaySequence(sequence);
-    this.program.loadReplayTrack(track);
-    this.transport.rewind();
-    this.restartPiece();
-  }
-
-  clearReplaySequence(): void {
-    this.program.clearReplay();
   }
 
   setPieceDirector(director: MusicPieceDirector | null): void {
@@ -328,7 +310,7 @@ export class TavernMusicEngine implements MusicPlaybackPort {
       }
       const piece = this.program.piece;
       if (this.transport.hasReachedEnd(piece.totalPulses)) {
-        if (!this.config.autoAdvance && !this.program.isReplaying) {
+        if (!this.config.autoAdvance) {
           this.reporter.complete();
           return;
         }
@@ -413,7 +395,6 @@ export class TavernMusicEngine implements MusicPlaybackPort {
     const advance = this.program.advance("auto");
     if (advance.kind === "complete") {
       this.reporter.complete();
-      if (advance.onComplete) queueMicrotask(advance.onComplete);
       return;
     }
     this.transport.rewind();

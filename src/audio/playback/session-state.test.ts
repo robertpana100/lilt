@@ -1,9 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { createMusicReplayTrack } from "./replay";
 import {
   cloneMusicSessionState,
   createInitialMusicSessionState,
-  musicSessionStateFromReplay,
   reduceMusicSessionState,
   updateMusicSessionEffect,
 } from "./session-state";
@@ -43,13 +41,5 @@ describe("music session state", () => {
     expect(tuned).toMatchObject({ pieceIndex: 4, chords: { amount: 0, strumMs: 40 } });
     expect(effected.effects.tone.lowGainDb).toBe(12);
     expect(effected.effects).not.toBe(tuned.effects);
-  });
-
-  test("adopts replay recipes as auto-advancing session snapshots", () => {
-    const initial = createInitialMusicSessionState({ pick: () => 0, randomSeed: () => 5 });
-    const { autoAdvance: _autoAdvance, ...recipe } = initial;
-    const track = createMusicReplayTrack("A remembered take", recipe);
-
-    expect(musicSessionStateFromReplay(track)).toEqual({ ...track.recipe, autoAdvance: true });
   });
 });

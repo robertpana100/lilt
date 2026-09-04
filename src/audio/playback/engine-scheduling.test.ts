@@ -1,6 +1,5 @@
-import { afterEach, describe, expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { generateMusicPiece } from "../composition/generator";
-import { resetMusicLibraryForTests } from "../musicLibrary";
 import { cloneMusicEffects, DEFAULT_MUSIC_EFFECTS } from "../synthesis/effects/config";
 import { varyMusicEffects } from "../synthesis/effects/variation";
 import { engineConfig } from "../tavern-music.test-support";
@@ -16,8 +15,6 @@ import {
 } from "./engine.test-support";
 
 describe("procedural-lute scheduling and effects", () => {
-  afterEach(resetMusicLibraryForTests);
-
   test("publishes the opening section once the score clock starts", async () => {
     const audio = fakeAudioContext();
     const timers = fakeTimers();
@@ -108,12 +105,11 @@ describe("procedural-lute scheduling and effects", () => {
     try {
       await engine.start();
       const before = engine.getRuntimeSnapshot();
-      const nonce = before.pieceStartNonce;
 
       engine.seek(before.durationSeconds * 0.5);
       const after = engine.getRuntimeSnapshot();
       const position = engine.getPositionSeconds();
-      expect(after.pieceStartNonce).toBe(nonce);
+      expect(after.piece).toBe(before.piece);
       expect(position).toBeGreaterThan(before.durationSeconds * 0.4);
       expect(position).toBeLessThan(before.durationSeconds * 0.6);
       const piece = before.piece;

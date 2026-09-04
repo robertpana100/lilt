@@ -46,19 +46,6 @@ function harness(overrides: Partial<MusicReporterView> = {}) {
 }
 
 describe("MusicStatusReporter", () => {
-  test("only announcing a sounding piece moves the piece-start nonce", () => {
-    const { reporter, runtime } = harness();
-    reporter.announcePiece("playing");
-    reporter.section("verse");
-    reporter.gap();
-    reporter.renderingChanged();
-    expect(runtime.get().pieceStartNonce).toBe(1);
-
-    reporter.announcePiece("stopped");
-    reporter.announcePiece("playing");
-    expect(runtime.get().pieceStartNonce).toBe(2);
-  });
-
   test("a disabled boot announces status without composing the opening piece", () => {
     const { reporter, runtime, pieceReads } = harness({ isEnabled: () => false, hasPiece: () => false });
     reporter.announcePiece("stopped");
@@ -82,12 +69,11 @@ describe("MusicStatusReporter", () => {
     expect(notified).toBe(after);
   });
 
-  test("a rendering change updates the recipe without announcing a new play", () => {
+  test("a rendering change preserves the current piece and playback status", () => {
     const { reporter, runtime } = harness();
     reporter.announcePiece("playing");
     const before = runtime.get();
     reporter.renderingChanged();
-    expect(runtime.get().pieceStartNonce).toBe(before.pieceStartNonce);
     expect(runtime.get().status).toBe(before.status);
     expect(runtime.get().piece).toBe(before.piece);
   });

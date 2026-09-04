@@ -13,24 +13,25 @@ describe("music settings", () => {
       enabled: false,
       volume: 0.35,
       controlMode: "auto",
-      favoritesOrder: "shuffle",
     });
   });
 
-  test("defaults an invalid control mode and validates favourites order", () => {
-    localStorage.setItem(
-      MUSIC_SETTINGS_STORAGE_KEY,
-      JSON.stringify({ enabled: false, volume: 0.7, controlMode: "invalid", favoritesOrder: "ordered" }),
-    );
-    reloadMusicSettingsFromStorage();
-    expect(getMusicSettings()).toEqual({
-      enabled: false,
-      volume: 0.7,
-      controlMode: "auto",
-      favoritesOrder: "ordered",
-      systemMediaControls: true,
-    });
-  });
+  test.each(["invalid", "favorites"])(
+    "falls back to automatic playback for the obsolete or invalid mode %s",
+    (controlMode) => {
+      localStorage.setItem(
+        MUSIC_SETTINGS_STORAGE_KEY,
+        JSON.stringify({ enabled: false, volume: 0.7, controlMode, favoritesOrder: "ordered" }),
+      );
+      reloadMusicSettingsFromStorage();
+      expect(getMusicSettings()).toEqual({
+        enabled: false,
+        volume: 0.7,
+        controlMode: "auto",
+        systemMediaControls: true,
+      });
+    },
+  );
   test("isolates Lilt preferences from the source game's storage", () => {
     localStorage.setItem("the-city-remembers-music", JSON.stringify({ enabled: true, volume: 0.9 }));
     reloadMusicSettingsFromStorage();

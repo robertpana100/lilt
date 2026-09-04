@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { getMusicApplication } from "./application";
-import { ensureFavoritesPlayback, stopFavoritesPlayback } from "./playback/favorites";
 import { getMusicSettings, useMusicSettings } from "./musicSettings";
 import type { MusicPlaybackPort } from "./playback/port";
 import { getSystemMediaSession, type SystemMediaSession } from "./system-media";
@@ -50,11 +49,6 @@ export function ProceduralMusic() {
 
   // The music session is the single owner of engine configuration, including
   // which root plays next; this host only owns browser lifecycle.
-  useEffect(() => {
-    if (settings.controlMode === "favorites") ensureFavoritesPlayback();
-    else stopFavoritesPlayback();
-  }, [settings.controlMode]);
-
   useEffect(() => {
     const detachApplication = application.attach();
     const removeUnlockListeners = () => {

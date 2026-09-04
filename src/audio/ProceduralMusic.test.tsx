@@ -21,16 +21,13 @@ const mocks = vi.hoisted(() => {
   return {
     application,
     detachApplication,
-    ensureFavoritesPlayback: vi.fn(),
     media,
     settings: {
       enabled: true,
       volume: 0.35,
       controlMode: "auto",
-      favoritesOrder: "shuffle",
       systemMediaControls: true,
     } as MusicSettings,
-    stopFavoritesPlayback: vi.fn(),
     playback,
     unsubscribeRuntime,
   };
@@ -40,10 +37,6 @@ vi.mock("./application", () => ({ getMusicApplication: () => mocks.application }
 vi.mock("./musicSettings", () => ({
   getMusicSettings: () => mocks.settings,
   useMusicSettings: () => mocks.settings,
-}));
-vi.mock("./playback/favorites", () => ({
-  ensureFavoritesPlayback: mocks.ensureFavoritesPlayback,
-  stopFavoritesPlayback: mocks.stopFavoritesPlayback,
 }));
 vi.mock("./system-media", () => ({ getSystemMediaSession: () => mocks.media }));
 
@@ -63,22 +56,17 @@ describe("procedural music browser host", () => {
     mocks.playback.subscribeRuntime.mockReturnValue(mocks.unsubscribeRuntime);
   });
 
-  test("owns media, playback, favorites, gesture unlock, and cleanup for its mounted lifetime", async () => {
+  test("owns media, playback, gesture unlock, and cleanup for its mounted lifetime", async () => {
     const view = render(<ProceduralMusic />);
 
     expect(mocks.application.attach).toHaveBeenCalledOnce();
     expect(mocks.media.attach).toHaveBeenCalledOnce();
     expect(mocks.playback.subscribeRuntime).toHaveBeenCalledOnce();
-    expect(mocks.stopFavoritesPlayback).toHaveBeenCalledOnce();
 
     fireEvent.pointerDown(window);
     await waitFor(() => expect(mocks.application.unlock).toHaveBeenCalledOnce());
     fireEvent.keyDown(window);
     expect(mocks.application.unlock).toHaveBeenCalledOnce();
-
-    mocks.settings.controlMode = "favorites";
-    view.rerender(<ProceduralMusic />);
-    expect(mocks.ensureFavoritesPlayback).toHaveBeenCalledOnce();
 
     mocks.settings.systemMediaControls = false;
     view.rerender(<ProceduralMusic />);

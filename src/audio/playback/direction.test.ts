@@ -84,10 +84,4 @@ describe("directNextMusicPiece", () => {
 
     expect(directNextMusicPiece(config, "override", () => 0)).toBe(config);
   });
-
-  test("favorites playback is left to the takes that were saved", () => {
-    const config = engineConfig("hearth");
-
-    expect(directNextMusicPiece(config, "favorites", () => 0)).toBe(config);
-  });
 });

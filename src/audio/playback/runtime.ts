@@ -2,13 +2,11 @@ import type { MusicPiece } from "../composition/generator";
 import { musicPieceLineup } from "../composition/lineup";
 import { varyMusicEffects } from "../synthesis/effects/variation";
 import type { MusicEffectsConfig } from "../synthesis/effects/config";
-import { captureMusicReplayRecipe } from "./replay";
 import type { MusicEngineConfig, MusicRuntimeSnapshot } from "./types";
 
 type MusicPieceSnapshot = Pick<
   MusicRuntimeSnapshot,
   | "piece"
-  | "recipe"
   | "lineup"
   | "soundingEffects"
   | "rootId"
@@ -37,13 +35,8 @@ export function musicPieceSnapshot(
 ): MusicPieceSnapshot {
   return {
     piece,
-    // Captured here so consumers that react to the runtime, like play history,
-    // can regenerate the piece without reaching into the engine's config.
-    recipe: captureMusicReplayRecipe(config, piece),
     lineup: musicPieceLineup(piece, config.mutedParts),
     soundingEffects,
-    // Read off the piece rather than the config: a replayed take keeps the root
-    // it was saved from while the session snapshot has moved on.
     rootId: piece.rootId,
     pieceIndex: piece.pieceIndex,
     compositionSeed: piece.compositionSeed,
@@ -82,7 +75,6 @@ export class MusicRuntimePublisher {
       this.snapshot = {
         status: "stopped",
         sectionId: piece.sections[0]?.id ?? null,
-        pieceStartNonce: 0,
         ...musicPieceSnapshot(piece, name, config, varyMusicEffects(config.effects, piece.performanceSeed)),
         ...pending,
       };
@@ -122,7 +114,6 @@ export class MusicRuntimePublisher {
       this.snapshot = {
         status: "stopped",
         sectionId: patch.piece.sections[0]?.id ?? null,
-        pieceStartNonce: 0,
         ...pending,
         ...patch,
       } as MusicRuntimeSnapshot;

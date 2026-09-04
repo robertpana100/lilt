@@ -16,29 +16,27 @@ npm run dev
 Open http://127.0.0.1:5174. `npm run build` produces `dist/` and
 `npm run preview` serves that build at http://127.0.0.1:4174.
 Playback starts when you press Play; the first visit is quiet. Browser preferences
-and the library stay on that origin, so development and preview have separate data.
+stay on that origin, so development and preview have separate settings.
 
 The UI uses React 19, shadcn/ui (Base UI), Tailwind CSS 4, and Vite. UI components
 are vendored in `src/components/ui`; the slider also forwards its accessible name
 to the actual thumb. The independent app shell owns artwork colors, media artwork,
 visible notifications, and the responsive studio layout.
 
-- `npm test` — deterministic composition, rendering, playback, storage, MIDI, and media tests.
+- `npm test` — deterministic composition, rendering, playback, settings, and media tests.
 - `npm run typecheck` — application and test types.
 - `npm run lint` — code, React, accessibility, and independence checks.
 - `npm run format` / `npm run format:check` — formatting.
 
 ## Studio
 
-The player, composition controls, instruments, effects, and library share one
-scrolling view. Choose **Manual** or **Enable manual controls** to edit the score,
-mix, harmony, rhythm, and effects. Automatic and favourite playback keep those
-controls visible but disabled. The player stays visible while scrolling on desktop.
+The player, composition controls, instruments, and effects share one scrolling
+view. Choose **Manual** or **Enable manual controls** to edit the score,
+mix, harmony, rhythm, and effects. Automatic playback keeps those controls
+visible but disabled. The player stays visible while scrolling on desktop.
 
-**Recent** and **Favourites** appear together and share a search field. The library
-keeps the latest 25 played takes and up to 100 favourites. MIDI downloads contain
-note data. Session controls reset on reload; favouriting a played take preserves
-its replay recipe.
+Session controls reset on reload. Played tracks are not saved, and MIDI export
+is not available.
 
 The header offers **Light**, **Dark**, and **System** appearance. The choice persists
 locally, follows OS changes in System mode, and updates both the interface and
@@ -47,7 +45,7 @@ cover art without restarting playback.
 ## Ownership
 
 `src/audio` owns composition, arrangement, synthesis, effects, playback, settings,
-library/history, cover art, MIDI export, and system-media integration. Cover art
+cover art, and system-media integration. Cover art
 accepts colors from its host; it does not depend on a theme implementation.
 See [audio architecture](src/audio/ARCHITECTURE.md) and
 [extraction boundaries and verification](docs/extraction.md).

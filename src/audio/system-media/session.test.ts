@@ -1,7 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { generateMusicPiece } from "../composition/generator";
 import { NO_MUTED_PARTS } from "../composition/roots";
-import { captureMusicReplayRecipe } from "../playback/replay";
 import type { MusicRuntimeSnapshot } from "../playback/types";
 import { DEFAULT_MUSIC_EFFECTS } from "../synthesis/effects/config";
 import { DEFAULT_MUSIC_CHORDS } from "../composition/chord-config";
@@ -24,16 +23,13 @@ const fixtureConfig = {
   mutedParts: NO_MUTED_PARTS,
 } as const;
 const fixturePiece = generateMusicPiece(fixtureConfig);
-const fixtureRecipe = captureMusicReplayRecipe(fixtureConfig, fixturePiece);
 import { SystemMediaSession } from "./session";
 import type { SystemMediaAction, SystemMediaPlaybackState, SystemMediaPosition, SystemMediaTrack } from "./types";
 
 function snapshot(overrides: Partial<MusicRuntimeSnapshot> = {}): MusicRuntimeSnapshot {
   return {
     status: "playing",
-    pieceStartNonce: 0,
     piece: fixturePiece,
-    recipe: fixtureRecipe,
     lineup: [{ part: "strings", style: "renaissance-lute", technique: "melody" }],
     soundingEffects: DEFAULT_MUSIC_EFFECTS,
     rootId: "hearth",

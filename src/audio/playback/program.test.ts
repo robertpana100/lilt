@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
+import { nameMusicPiece } from "../composition/names";
 import { generateMusicPiece } from "../composition/generator";
 import { NO_MUTED_PARTS, getMusicRoot, type MusicRootId } from "../composition/roots";
 import { DEFAULT_MUSIC_EFFECTS } from "../synthesis/effects/config";
-import { captureMusicReplayRecipe, createMusicReplayTrack } from "./replay";
 import { MusicProgram } from "./program";
 import type { MusicEngineConfig } from "./types";
 import { DEFAULT_MUSIC_CHORDS } from "../composition/chord-config";
@@ -29,18 +29,12 @@ function engineConfig(rootId: MusicRootId = "hearth"): MusicEngineConfig {
   };
 }
 
-function replayTrack(name: string, rootId: MusicRootId) {
-  const config = engineConfig(rootId);
-  return createMusicReplayTrack(name, captureMusicReplayRecipe(config, generateMusicPiece(config)));
-}
-
 describe("MusicProgram", () => {
   test("opens on the piece its config describes", () => {
     const program = new MusicProgram(engineConfig("road"));
 
     expect(program.piece).toEqual(generateMusicPiece(engineConfig("road")));
     expect(program.pieceIndex).toBe(0);
-    expect(program.isReplaying).toBe(false);
     expect(program.name.length).toBeGreaterThan(0);
   });
 
@@ -62,16 +56,16 @@ describe("MusicProgram", () => {
     expect(program.eventsAt(program.piece.events[0]!.startPulse).length).toBeGreaterThan(0);
   });
 
-  test("regenerating composes a new piece and abandons the saved take's name", () => {
+  test("regenerating composes and names a new piece", () => {
     const program = new MusicProgram(engineConfig());
-    program.loadReplayTrack(replayTrack("A tavern night", "road"));
-    expect(program.name).toBe("A tavern night");
+    const before = program.piece;
 
     program.regenerate(engineConfig("lament"), 3);
 
     expect(program.pieceIndex).toBe(3);
     expect(program.piece).toEqual(generateMusicPiece({ ...engineConfig("lament"), pieceIndex: 3 }));
-    expect(program.name).not.toBe("A tavern night");
+    expect(program.piece).not.toBe(before);
+    expect(program.name).toBe(nameMusicPiece(program.piece));
   });
 
   test("a regenerate before anything reads stays lazy and composes the new config", () => {
@@ -81,65 +75,6 @@ describe("MusicProgram", () => {
 
     expect(program.hasPiece).toBe(false);
     expect(program.piece).toEqual(generateMusicPiece({ ...engineConfig("lament"), pieceIndex: 2 }));
-  });
-
-  test("ending a replay hands back the sequence's completion callback", () => {
-    const program = new MusicProgram(engineConfig());
-    let completed = 0;
-    program.setReplaySequence({
-      next: () => null,
-      onComplete: () => {
-        completed += 1;
-      },
-    });
-    program.loadReplayTrack(replayTrack("A tavern night", "road"));
-
-    const onComplete = program.endReplay();
-
-    expect(program.isReplaying).toBe(false);
-    onComplete?.();
-    expect(completed).toBe(1);
-  });
-
-  test("a loaded take carries back the config it was recorded with", () => {
-    const program = new MusicProgram(engineConfig());
-    const track = replayTrack("The empty chair", "lament");
-
-    program.loadReplayTrack(track);
-
-    expect(program.config.rootId).toBe("lament");
-    // A lone take must not roll on into the generated repertoire.
-    expect(program.config.autoAdvance).toBe(false);
-    expect(program.name).toBe("The empty chair");
-  });
-
-  test("a sequenced take keeps advancing and reports the config of each", () => {
-    const program = new MusicProgram(engineConfig());
-    const tracks = [replayTrack("first", "hearth"), replayTrack("second", "road")];
-    program.setReplaySequence({ next: (id) => (id === tracks[0]!.id ? tracks[1]! : null) });
-    program.loadReplayTrack(tracks[0]!);
-
-    const advance = program.advance("auto");
-
-    expect(advance.kind).toBe("replay");
-    expect(program.config.rootId).toBe("road");
-    expect(program.config.autoAdvance).toBe(true);
-    expect(program.name).toBe("second");
-  });
-
-  test("an exhausted sequence completes once and hands back its callback", () => {
-    const program = new MusicProgram(engineConfig());
-    const track = replayTrack("only", "hearth");
-    const onComplete = () => undefined;
-    program.setReplaySequence({ next: () => null, onComplete });
-    program.loadReplayTrack(track);
-
-    const advance = program.advance("auto");
-
-    expect(advance).toEqual({ kind: "complete", onComplete });
-    expect(program.isReplaying).toBe(false);
-    // With the sequence spent, the generator owns what follows.
-    expect(program.advance("auto").kind).toBe("piece");
   });
 
   test("a director chooses what the next generated piece is composed from", () => {
@@ -153,19 +88,6 @@ describe("MusicProgram", () => {
     expect(program.piece.rootId).toBe("brawl");
   });
 
-  test("a saved take is the sequence's to choose, not the director's", () => {
-    const program = new MusicProgram(engineConfig());
-    const tracks = [replayTrack("first", "hearth"), replayTrack("second", "road")];
-    program.setDirector(() => engineConfig("brawl"));
-    program.setReplaySequence({ next: (id) => (id === tracks[0]!.id ? tracks[1]! : null) });
-    program.loadReplayTrack(tracks[0]!);
-
-    const advance = program.advance("auto");
-
-    expect(advance.kind).toBe("replay");
-    expect(program.config.rootId).toBe("road");
-  });
-
   test("nothing is directed once the repertoire has stopped advancing", () => {
     const program = new MusicProgram({ ...engineConfig(), autoAdvance: false });
     let directed = 0;
@@ -176,7 +98,7 @@ describe("MusicProgram", () => {
 
     const advance = program.advance("auto");
 
-    expect(advance).toEqual({ kind: "complete", onComplete: undefined });
+    expect(advance).toEqual({ kind: "complete" });
     expect(directed).toBe(0);
   });
 
@@ -214,16 +136,5 @@ describe("MusicProgram", () => {
     expect(advance).toEqual({ kind: "piece" });
     expect(program.config).toEqual(engineConfig("hearth"));
     expect(program.piece.rootId).toBe("hearth");
-  });
-
-  test("clearing a replay drops the sequence and the take's identity", () => {
-    const program = new MusicProgram(engineConfig());
-    program.setReplaySequence({ next: () => null });
-    program.loadReplayTrack(replayTrack("saved", "road"));
-
-    program.clearReplay();
-
-    expect(program.isReplaying).toBe(false);
-    expect(program.name).not.toBe("saved");
   });
 });

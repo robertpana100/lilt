@@ -1,12 +1,5 @@
 import type { MusicPiece } from "./types";
-import {
-  getLuteStyle,
-  getMusicRoot,
-  type LuteStyleId,
-  type LuteTechnique,
-  type MusicPart,
-  type MusicRootId,
-} from "./roots";
+import { getMusicRoot, type LuteStyleId, type LuteTechnique, type MusicPart, type MusicRootId } from "./roots";
 
 export const LUTE_TECHNIQUE_NAMES: Readonly<Record<LuteTechnique, string>> = {
   melody: "Melody course",
@@ -20,7 +13,7 @@ export interface MusicLuteLineupEntry {
   style: LuteStyleId;
 }
 
-export function musicPartsLineup(
+function musicPartsLineup(
   rootId: MusicRootId,
   soundingParts: readonly MusicPart[],
   mutedParts: Readonly<Record<MusicPart, boolean>>,
@@ -46,15 +39,4 @@ export function musicPieceLineup(
     piece.events.map((event) => event.part),
     mutedParts,
   );
-}
-
-/** One compact physical-instrument label for library rows. */
-export function luteSummary(lineup: readonly MusicLuteLineupEntry[]): string {
-  if (lineup.length === 0) return "Muted lute";
-  const [first] = lineup;
-  if (!first) return "Muted lute";
-  const name = getLuteStyle(first.style).name;
-  return lineup.some((entry) => entry.part === "rhythm") && lineup.some((entry) => entry.part !== "rhythm")
-    ? `${name} duo`
-    : name;
 }

@@ -1,12 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { config, courseEvents, rhythmEvents } from "../tavern-music.test-support";
-import {
-  describeMusicPiece,
-  generateMusicPiece,
-  generateNextMusicPiece,
-  getPerformanceVariation,
-  musicPieceDescription,
-} from "./generator";
+import { generateMusicPiece, generateNextMusicPiece, getPerformanceVariation } from "./generator";
 import { musicPieceLineup } from "./lineup";
 import { MUSIC_ROOTS, NO_MUTED_PARTS, pulsesPerBar } from "./roots";
 
@@ -75,18 +69,6 @@ describe("music generation profiles and output", () => {
       expect(performance.velocityScale).toBeLessThanOrEqual(1.12);
       if (event.startPulse === 0) expect(performance.startOffsetSeconds).toBeGreaterThanOrEqual(0);
     });
-  });
-
-  test("describes a piece from its config exactly as composing it would", () => {
-    // The description is what library rows and search read instead of the
-    // composed piece, so it must never drift from what composition produces,
-    // including which parts end up carrying events.
-    for (const root of MUSIC_ROOTS) {
-      for (let seed = 1; seed <= 4; seed += 1) {
-        const pieceConfig = config(root.id, { masterSeed: seed, novelty: seed / 4 });
-        expect(describeMusicPiece(pieceConfig)).toEqual(musicPieceDescription(generateMusicPiece(pieceConfig)));
-      }
-    }
   });
 
   test("advances repertoire only when automatic playback is enabled", () => {

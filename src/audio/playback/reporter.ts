@@ -15,8 +15,6 @@ export interface MusicReporterView {
 
 /** Turns transport transitions into the immutable snapshot read by the UI. */
 export class MusicStatusReporter {
-  private pieceStarts = 0;
-
   constructor(
     private readonly runtime: MusicRuntimePublisher,
     private readonly view: MusicReporterView,
@@ -67,7 +65,6 @@ export class MusicStatusReporter {
     this.runtime.publish({
       status,
       sectionId: sounding ? (piece.sections[0]?.id ?? null) : null,
-      ...(sounding ? { pieceStartNonce: ++this.pieceStarts } : {}),
       ...musicPieceSnapshot(piece, this.view.pieceName(), this.view.config(), this.view.soundingEffects()),
     });
   }

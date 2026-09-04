@@ -368,54 +368,6 @@
 .control-section[aria-labelledby="sound-desk-effects"] > .flex {
   grid-column: 1 / -1;
 }
-.music-library {
-  border: 1px solid var(--border);
-  padding: 22px;
-  border-radius: 10px;
-  --card-spacing: 0px;
-  gap: 20px;
-  margin-top: 28px;
-}
-.library-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-}
-.library-heading [data-slot="card-title"] {
-  font-size: 18px;
-  font-weight: 550;
-}
-.library-heading [data-slot="input-group"] {
-  width: min(100%, 300px);
-}
-.library-shelves {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-}
-.library-shelf {
-  min-width: 0;
-}
-.shelf-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 32px;
-  margin-bottom: 12px;
-  gap: 8px;
-}
-.shelf-heading h3 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 550;
-}
-.music-library [data-slot="item"] {
-  border-color: var(--border);
-  background: var(--card);
-}
 .skip-link {
   position: fixed;
   top: 8px;
@@ -494,8 +446,7 @@
     display: none;
   }
   .score-grid,
-  .instruments-grid,
-  .library-shelves {
+  .instruments-grid {
     grid-template-columns: minmax(0, 1fr);
   }
   .control-section {
@@ -503,19 +454,6 @@
   }
   .panel-title {
     font-size: 16px;
-  }
-  .music-library {
-    padding: 16px;
-  }
-  .library-heading {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .library-heading [data-slot="input-group"] {
-    width: 100%;
-  }
-  .library-shelves {
-    gap: 20px;
   }
   .transport-controls {
     gap: 8px;

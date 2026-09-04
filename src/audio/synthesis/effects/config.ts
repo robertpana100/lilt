@@ -64,7 +64,7 @@ export const DEFAULT_MUSIC_EFFECTS: Readonly<MusicEffectsConfig> = Object.freeze
  * capped at 0.2 s and its mix and feedback at a tenth of their former reach. */
 export const ECHO_LIMITS = Object.freeze({ maxMix: 0.06, maxDelaySeconds: 0.2, maxFeedback: 0.075 });
 
-/** Strict bounded config for session updates and persisted replay recipes. */
+/** Strict bounded config for session updates. */
 export function normalizeMusicEffects(value: unknown): MusicEffectsConfig {
   const candidate = partialObject<MusicEffectsConfig>(value);
   const chorus = partialObject<ChorusEffectConfig>(candidate.chorus);

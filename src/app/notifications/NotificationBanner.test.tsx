@@ -5,12 +5,12 @@ import { NotificationBanner } from "./NotificationBanner";
 describe("studio notifications", () => {
   beforeEach(dismissNotification);
   afterEach(cleanup);
-  test("announces storage errors instead of dropping them and can be dismissed", () => {
+  test("announces playback errors and can be dismissed", () => {
     const view = render(<NotificationBanner />);
-    act(() => notify("error", "The music library could not be saved."));
-    expect(screen.getByText("The music library could not be saved.")).toBeTruthy();
-    expect(view.container.querySelector('[aria-live="polite"]')?.textContent).toContain("could not be saved");
+    act(() => notify("error", "Music could not start."));
+    expect(screen.getByText("Music could not start.")).toBeTruthy();
+    expect(view.container.querySelector('[aria-live="polite"]')?.textContent).toContain("Music could not start.");
     fireEvent.click(screen.getByRole("button", { name: "Dismiss notification" }));
-    expect(screen.queryByText("The music library could not be saved.")).toBeNull();
+    expect(screen.queryByText("Music could not start.")).toBeNull();
   });
 });

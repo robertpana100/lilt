@@ -1,6 +1,4 @@
-import { afterEach, describe, expect, test } from "vitest";
-import { recordAudiblePieces } from "../library/playback-observer";
-import { getMusicHistory, resetMusicLibraryForTests } from "../musicLibrary";
+import { describe, expect, test } from "vitest";
 import { DEFAULT_MUSIC_EFFECTS } from "../synthesis/effects/config";
 import { engineConfig } from "../tavern-music.test-support";
 import { TavernMusicEngine } from "./engine";
@@ -10,14 +8,11 @@ import {
   fakeTimers,
   flushMusicPromises,
   readyEngine,
-  runThroughGap,
   runToPieceEnd,
   tickScheduler,
 } from "./engine.test-support";
 
-describe("procedural-lute lifecycle and history", () => {
-  afterEach(resetMusicLibraryForTests);
-
+describe("procedural-lute lifecycle", () => {
   test("stops notifying a runtime subscriber after it unsubscribes", async () => {
     const audio = fakeAudioContext();
     const timers = fakeTimers();
@@ -142,38 +137,10 @@ describe("procedural-lute lifecycle and history", () => {
     }
   });
 
-  test("play history observes the runtime and records each audible piece start once", async () => {
-    const audio = fakeAudioContext();
-    const timers = fakeTimers();
-    const engine = readyEngine(audio, timers);
-    const stopObserving = recordAudiblePieces(engine);
-
-    try {
-      expect(getMusicHistory()).toHaveLength(0);
-      await engine.start();
-      expect(getMusicHistory()).toHaveLength(1);
-      expect(getMusicHistory()[0]!.name).toBe(engine.getRuntimeSnapshot().name);
-
-      // Section publishes on later ticks must not pass for new piece starts.
-      await tickScheduler(audio, timers, 5);
-      expect(getMusicHistory()).toHaveLength(1);
-
-      await runToPieceEnd(engine, audio, timers);
-      await runThroughGap(engine, audio, timers);
-      expect(engine.getRuntimeSnapshot().status).toBe("playing");
-      expect(getMusicHistory()).toHaveLength(2);
-    } finally {
-      stopObserving();
-      engine.dispose();
-    }
-  });
-
   test("a music-disabled boot never materializes a runtime snapshot", async () => {
     const timers = fakeTimers();
     const engine = new TavernMusicEngine({ createAudioContext: () => null, ...timers });
-    // The wiring a real boot performs: history observation plus the media
-    // mirror, both of which react to every publish by peeking, not forcing.
-    const stopObserving = recordAudiblePieces(engine);
+    // The media mirror reacts to every publish by peeking, not forcing.
     const peeks: Array<boolean> = [];
     const unsubscribe = engine.subscribeRuntime(() => peeks.push(engine.peekRuntimeSnapshot() !== null));
 
@@ -186,10 +153,8 @@ describe("procedural-lute lifecycle and history", () => {
       // opening piece to describe it: no snapshot exists to this day.
       expect(peeks).toEqual([false]);
       expect(engine.peekRuntimeSnapshot()).toBeNull();
-      expect(getMusicHistory()).toHaveLength(0);
     } finally {
       unsubscribe();
-      stopObserving();
       engine.dispose();
     }
   });

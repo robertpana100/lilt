@@ -25,7 +25,6 @@ import {
   type MusicEffectsConfig,
 } from "../synthesis/effects/config";
 import { nextMusicRoot } from "./direction";
-import type { MusicReplayTrack } from "./replay";
 import type { MusicEngineConfig } from "./types";
 
 export type MusicSessionState = MusicEngineConfig;
@@ -95,10 +94,6 @@ export function cloneMusicSessionState(state: MusicSessionState): MusicSessionSt
     rhythmLute: cloneMusicRhythmLute(state.rhythmLute),
     effects: cloneMusicEffects(state.effects),
   };
-}
-
-export function musicSessionStateFromReplay(track: MusicReplayTrack): MusicSessionState {
-  return { ...track.recipe, autoAdvance: true };
 }
 
 /** Pure state transition for every ordinary editable session action. */
