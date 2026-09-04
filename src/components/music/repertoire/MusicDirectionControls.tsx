@@ -1,35 +1,20 @@
 import { setMusicControlMode, type MusicSettings } from "@/audio/musicSettings";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const MUSIC_DIRECTION_ITEMS = {
-  auto: "Automatic",
-  override: "Manual",
-} as const;
-
-interface MusicDirectionControlsProps {
-  settings: MusicSettings;
-}
-
-/** Who chooses what plays next: Lilt or the player. */
-export function MusicDirectionControls({ settings }: MusicDirectionControlsProps) {
+export function MusicDirectionControls({ settings }: { settings: MusicSettings }) {
   return (
-    <div className="space-y-2">
-      <p className="text-xs font-medium">Direction</p>
-      <Select
-        items={MUSIC_DIRECTION_ITEMS}
+    <label className="inline-field">
+      Direction
+      <select
+        aria-label="Music direction"
         value={settings.controlMode}
-        onValueChange={(value) => {
+        onChange={(event) => {
+          const value = event.currentTarget.value;
           if (value === "auto" || value === "override") setMusicControlMode(value);
         }}
       >
-        <SelectTrigger aria-label="Music direction" className="w-full">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="auto">Automatic</SelectItem>
-          <SelectItem value="override">Manual</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+        <option value="auto">Automatic</option>
+        <option value="override">Manual</option>
+      </select>
+    </label>
   );
 }

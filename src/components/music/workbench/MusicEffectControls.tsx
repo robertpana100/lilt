@@ -1,8 +1,5 @@
 import type { ReactNode } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { Slider, sliderValue } from "@/components/ui/slider";
-import { SwitchRow } from "./ControlFields";
+import { CheckboxField, RangeField } from "./ControlFields";
 
 export function MusicEffectSlider({
   label,
@@ -25,24 +22,19 @@ export function MusicEffectSlider({
   disabled?: boolean;
   onChange: (value: number) => void;
 }) {
+  const precision = Number.isInteger(step) ? 0 : step < 0.1 ? 2 : 1;
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between text-xs">
-        <Label>{label}</Label>
-        <Badge variant="outline">
-          {Number.isInteger(step) ? value.toFixed(0) : value.toFixed(step < 0.1 ? 2 : 1)} {unit}
-        </Badge>
-      </div>
-      <Slider
-        aria-label={ariaLabel ?? `Music effect ${label}`}
-        min={minimum}
-        max={maximum}
-        step={step}
-        value={[value]}
-        disabled={disabled}
-        onValueChange={(next) => onChange(sliderValue(next))}
-      />
-    </div>
+    <RangeField
+      label={label}
+      ariaLabel={ariaLabel ?? `Music effect ${label}`}
+      value={value}
+      min={minimum}
+      max={maximum}
+      step={step}
+      display={`${value.toFixed(precision)} ${unit}`}
+      disabled={disabled}
+      onChange={onChange}
+    />
   );
 }
 
@@ -60,15 +52,15 @@ export function MusicEffectBlock({
   children: ReactNode;
 }) {
   return (
-    <div role="group" aria-label={`${name} effect`} className="space-y-3 rounded-lg border p-3">
-      <SwitchRow
+    <div role="group" aria-label={`${name} effect`} className="effect-row">
+      <CheckboxField
+        label={name}
         ariaLabel={`Enable music ${name}`}
-        label={<span className="text-xs font-medium">{name}</span>}
         checked={enabled}
         disabled={bypassed}
         onCheckedChange={onEnabledChange}
       />
-      <div className="grid gap-3 sm:grid-cols-2">{children}</div>
+      {enabled && !bypassed && <div className="effect-parameters">{children}</div>}
     </div>
   );
 }

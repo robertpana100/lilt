@@ -7,7 +7,9 @@ There are no package links, source symlinks, or imports into the game repository
 
 The library (history, favourites, search, and saved-track replay) and MIDI export
 were subsequently removed. The ownership table below reflects the current app;
-the extraction verification records the features present at that time.
+the extraction verification records the features present at that time. The UI
+now uses native HTML controls and plain CSS; the original shadcn/Base UI and
+Tailwind dependencies have been removed.
 
 ## Boundaries reviewed
 
@@ -52,9 +54,8 @@ belong to the origin, so ports 5174 (development) and 4174 (preview) have separa
 settings. Existing Lilt library data is no longer read or written. Stored
 favourites playback preferences fall back to Automatic.
 
-The detailed controls are available in production under Sound desk, with their
-own section metadata and no debug-panel or game provider dependency. The controls
-share one page. Notifications report failed playback. Appearance supports light, dark, and system
+Detailed controls are available in Manual mode, with advanced settings in
+expandable sections and no debug-panel or game provider dependency. Notifications report failed playback. Appearance supports light, dark, and system
 settings, including the cover art. Product slogans and explanatory UI prose have
 been removed.
 
@@ -76,5 +77,5 @@ Hardware media behavior is covered through the adapter tests; no physical
 keyboard media-key test was performed.
 
 The production bundle includes its own renderer worker, audio worklet, and
-locally bundled font. There are no audio samples or remote generation calls.
+system fonts. There are no audio samples or remote generation calls.
 No game simulation run was needed: the game simulation was not changed.

@@ -42,7 +42,7 @@ export function AuditionSpectrum() {
       width={560}
       height={64}
       aria-label="Audition frequency spectrum"
-      className="h-16 w-full rounded-lg border bg-muted/30 text-primary"
+      className="audition-spectrum"
     />
   );
 }

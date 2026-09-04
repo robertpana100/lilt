@@ -1,5 +1,3 @@
-import { IconX } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
 import { dismissNotification, useNotification } from "./store";
 export function NotificationBanner() {
   const notice = useNotification();
@@ -8,9 +6,9 @@ export function NotificationBanner() {
       {notice && (
         <div className="notice" data-tone={notice.tone}>
           <p>{notice.message}</p>
-          <Button variant="ghost" size="icon" aria-label="Dismiss notification" onClick={dismissNotification}>
-            <IconX />
-          </Button>
+          <button type="button" aria-label="Dismiss notification" onClick={dismissNotification}>
+            Dismiss
+          </button>
         </div>
       )}
     </div>

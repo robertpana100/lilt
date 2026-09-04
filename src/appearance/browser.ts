@@ -17,7 +17,7 @@ export function getAppearanceStore() {
       root.style.colorScheme = appearance;
       document
         .querySelector('meta[name="theme-color"]')
-        ?.setAttribute("content", appearance === "dark" ? "#151715" : "#f4f5f2");
+        ?.setAttribute("content", appearance === "dark" ? "#171717" : "#fafafa");
     },
     onSystemChange: (listener) => {
       media.addEventListener("change", listener);

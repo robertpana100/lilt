@@ -31,5 +31,4 @@ export default tseslint.config(
       ],
     },
   },
-  { files: ["src/components/ui/**/*.{ts,tsx}"], rules: { "jsx-a11y/label-has-associated-control": "off" } },
 );

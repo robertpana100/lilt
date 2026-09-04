@@ -1,42 +1,72 @@
 import { useId, type ReactNode } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 
-export function NumberField({
+export function RangeField({
   label,
+  ariaLabel,
   value,
-  onChange,
+  min = 0,
+  max = 100,
+  step = 1,
+  display,
   disabled,
+  onChange,
 }: {
   label: string;
+  ariaLabel?: string;
   value: number;
-  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  display: string;
   disabled?: boolean;
+  onChange: (value: number) => void;
 }) {
-  const inputId = useId();
+  const id = useId();
   return (
-    <div className="space-y-2">
-      <Label htmlFor={inputId}>{label}</Label>
-      <Input
-        id={inputId}
-        type="number"
+    <div className="range-field">
+      <div className="field-heading">
+        <label htmlFor={id}>{label}</label>
+        <output htmlFor={id}>{display}</output>
+      </div>
+      <input
+        id={id}
+        aria-label={ariaLabel}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
         disabled={disabled}
-        value={Number.isFinite(value) ? value : ""}
-        onChange={(event) => onChange(event.target.valueAsNumber)}
+        onChange={(event) => onChange(event.currentTarget.valueAsNumber)}
       />
     </div>
   );
 }
 
-/**
- * A labelled toggle on one bordered row.
- *
- * The row keeps its own minimum height rather than sizing to its text, so a
- * one-line and a two-line toggle sitting together still present the same
- * touch target.
- */
-export function SwitchRow({
+export function NumberField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <label className="field">
+      {label}
+      <input
+        type="number"
+        value={Number.isFinite(value) ? value : ""}
+        onChange={(event) => {
+          if (Number.isFinite(event.currentTarget.valueAsNumber)) onChange(event.currentTarget.valueAsNumber);
+        }}
+      />
+    </label>
+  );
+}
+
+export function CheckboxField({
   label,
   checked,
   disabled,
@@ -46,13 +76,19 @@ export function SwitchRow({
   label: ReactNode;
   checked: boolean;
   disabled?: boolean;
-  ariaLabel: string;
+  ariaLabel?: string;
   onCheckedChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex min-h-11 items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm">
-      <span className="min-w-0">{label}</span>
-      <Switch aria-label={ariaLabel} checked={checked} disabled={disabled} onCheckedChange={onCheckedChange} />
-    </div>
+    <label className="checkbox-field">
+      <input
+        type="checkbox"
+        aria-label={ariaLabel}
+        checked={checked}
+        disabled={disabled}
+        onChange={(event) => onCheckedChange(event.currentTarget.checked)}
+      />
+      <span>{label}</span>
+    </label>
   );
 }

@@ -62,12 +62,6 @@ export function MusicCoverArt({ subject, size = 56, label = "Cover art" }: Music
   }, [design, size, devicePixelRatio]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      role="img"
-      aria-label={label}
-      style={{ width: size, height: size }}
-      className="shrink-0 rounded-md ring-1 ring-foreground/10"
-    />
+    <canvas ref={canvasRef} role="img" aria-label={label} style={{ width: size, height: size }} className="cover-art" />
   );
 }

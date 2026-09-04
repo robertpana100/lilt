@@ -4,27 +4,33 @@ import { MusicPieceSections } from "./MusicPieceSections";
 import { MusicCompositionSection } from "./MusicCompositionSection";
 import { MusicArrangementSections } from "./MusicArrangementSections";
 import { MusicEffectsSection } from "./MusicEffectsSection";
+import { AuditionPanel } from "./AuditionPanel";
+import { Disclosure } from "./Disclosure";
+
 export default function SoundDesk() {
   const settings = useMusicSettings();
-  const manual = settings.controlMode === "override";
   return (
-    <section className="workbench" aria-labelledby="sound-desk-title">
+    <section className="workbench" aria-label="Sound controls">
       <div className="workspace-heading">
-        <h2 id="sound-desk-title" className="panel-title">
-          Sound desk
-        </h2>
-        <div className="direction-controls">
-          <MusicDirectionControls settings={settings} />
-        </div>
+        <MusicDirectionControls settings={settings} />
       </div>
-      <fieldset disabled={!manual} inert={!manual} className="sound-desk-controls" aria-label="Manual controls">
-        <div className="score-grid">
+      {settings.controlMode === "override" && (
+        <div className="manual-controls">
           <MusicPieceSections />
-          <MusicCompositionSection />
+          <MusicEffectsSection />
+          <div className="advanced-controls">
+            <Disclosure title="Composition">
+              <MusicCompositionSection />
+            </Disclosure>
+            <Disclosure title="Instruments">
+              <MusicArrangementSections />
+            </Disclosure>
+            <Disclosure title="Audition">
+              <AuditionPanel />
+            </Disclosure>
+          </div>
         </div>
-        <MusicArrangementSections />
-        <MusicEffectsSection />
-      </fieldset>
+      )}
     </section>
   );
 }

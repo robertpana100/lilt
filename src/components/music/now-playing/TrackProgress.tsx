@@ -1,14 +1,43 @@
-import { useMusicPosition } from "@/audio/playback/react";
+import { useState } from "react";
+import { useMusicPosition, useMusicRuntime, useMusicSessionController } from "@/audio/playback/react";
 import { durationLabel } from "../format";
+
 export function TrackProgress({ duration }: { duration: number }) {
-  const position = Math.min(duration, Math.max(0, useMusicPosition()));
+  const livePosition = useMusicPosition();
+  const runtime = useMusicRuntime();
+  const controller = useMusicSessionController();
+  const [scrubPosition, setScrubPosition] = useState<number | null>(null);
+  const position = Math.min(duration, Math.max(0, scrubPosition ?? livePosition));
+  const canSeek = runtime.status === "playing" || runtime.status === "gap";
+  const commit = (value: number) => {
+    setScrubPosition(null);
+    controller.seek(value);
+  };
   return (
     <div className="track-progress">
-      <progress aria-label="Track progress" value={position} max={duration || 1} />
-      <div>
-        <span>{durationLabel(position)}</span>
-        <span>{durationLabel(duration)}</span>
-      </div>
+      <span>{durationLabel(position)}</span>
+      <input
+        type="range"
+        aria-label="Music position"
+        min={0}
+        max={duration || 1}
+        step={0.5}
+        value={position}
+        disabled={!canSeek}
+        onChange={(event) => setScrubPosition(event.currentTarget.valueAsNumber)}
+        onPointerUp={(event) => commit(event.currentTarget.valueAsNumber)}
+        onKeyUp={(event) => {
+          if (
+            ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)
+          )
+            commit(event.currentTarget.valueAsNumber);
+        }}
+        onBlur={() => {
+          if (scrubPosition !== null) commit(scrubPosition);
+        }}
+        onPointerCancel={() => setScrubPosition(null)}
+      />
+      <span>{durationLabel(duration)}</span>
     </div>
   );
 }

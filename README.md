@@ -18,10 +18,9 @@ Open http://127.0.0.1:5174. `npm run build` produces `dist/` and
 Playback starts when you press Play; the first visit is quiet. Browser preferences
 stay on that origin, so development and preview have separate settings.
 
-The UI uses React 19, shadcn/ui (Base UI), Tailwind CSS 4, and Vite. UI components
-are vendored in `src/components/ui`; the slider also forwards its accessible name
-to the actual thumb. The independent app shell owns artwork colors, media artwork,
-visible notifications, and the responsive studio layout.
+The UI uses React 19, native HTML controls, plain CSS, and Vite. There is no
+component library or CSS framework. The app shell owns the neutral light/dark
+palette, cover-art colors, system-media artwork, and notifications.
 
 - `npm test` — deterministic composition, rendering, playback, settings, and media tests.
 - `npm run typecheck` — application and test types.
@@ -30,10 +29,15 @@ visible notifications, and the responsive studio layout.
 
 ## Studio
 
-The player, composition controls, instruments, and effects share one scrolling
-view. Choose **Manual** from the Direction dropdown to edit the score,
-mix, harmony, rhythm, and effects. Automatic playback keeps those controls
-visible but disabled. The player stays visible while scrolling on desktop.
+Automatic mode shows the player and direction selector. Choose **Manual** to
+reveal atmosphere, tempo, variety, humanization, and effects. Effect parameters
+appear only while their effect is enabled; bypass hides the parameters while
+preserving their settings. Composition details, instruments, and audition tools
+live in native expandable sections.
+
+The player has one set of transport and volume controls. Its seek bar supports
+pointer and keyboard input during playback; track metadata is under **Track
+details**. Media keys can be enabled at the bottom of the view.
 
 Session controls reset on reload. Played tracks are not saved, and MIDI export
 is not available.

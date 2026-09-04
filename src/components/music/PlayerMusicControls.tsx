@@ -4,6 +4,7 @@ import { useMusicSettings } from "@/audio/musicSettings";
 import { NowPlayingCard } from "./now-playing/NowPlayingCard";
 import { SystemMediaToggle } from "./now-playing/SystemMediaToggle";
 import SoundDesk from "./workbench/SoundDesk";
+
 export function PlayerMusicControls() {
   const settings = useMusicSettings();
   const runtime = useMusicRuntime();
@@ -15,10 +16,10 @@ export function PlayerMusicControls() {
         enabled={settings.enabled}
         volume={settings.volume}
       />
-      <div className="studio-utility">
-        <SystemMediaToggle enabled={settings.systemMediaControls} />
-      </div>
       <SoundDesk />
+      <footer className="studio-footer">
+        <SystemMediaToggle enabled={settings.systemMediaControls} />
+      </footer>
     </div>
   );
 }
