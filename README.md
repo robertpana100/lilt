@@ -60,8 +60,3 @@ Use the latest Node.js release and npm.
 npm ci
 npm run dev
 ```
-
-Open http://127.0.0.1:5174 and press **Play**.
-
-`npm run build` creates a production build in `dist/`.
-`npm run verify` runs the tests and project checks.
