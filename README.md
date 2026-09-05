@@ -4,7 +4,7 @@ Lilt composes and plays lute duets in the browser. Every note is synthesized
 locally using Karplus-Strong synthesis. There are no recorded instrument samples
 or remote generation services.
 
-![Lilt player with style, tempo, melody, accompaniment, effects, and playback controls](docs/screenshot.png)
+![Lilt player with style, tempo, melody, accompaniment, effects, and playback controls](screenshot.png)
 
 ## How Karplus-Strong works
 
@@ -53,8 +53,6 @@ The string model lives in
 and sustain live in [event-renderer.ts](src/audio/synthesis/event-renderer.ts).
 
 ## Run locally
-
-Use the latest Node.js release and npm.
 
 ```sh
 npm ci
