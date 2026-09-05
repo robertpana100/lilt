@@ -4,9 +4,9 @@ import { getMusicRoot } from "@/audio/composition/roots";
 import { useMusicRuntime } from "@/audio/playback/react";
 import { useMusicSettings } from "@/audio/musicSettings";
 import { NowPlayingCard } from "./now-playing/NowPlayingCard";
-import SoundDesk from "./workbench/SoundDesk";
+import { MusicControls } from "./controls/MusicControls";
 
-export function PlayerMusicControls() {
+export function MusicStudio() {
   const settings = useMusicSettings();
   const runtime = useMusicRuntime();
   return (
@@ -17,7 +17,7 @@ export function PlayerMusicControls() {
         enabled={settings.enabled}
         volume={settings.volume}
       />
-      <SoundDesk />
+      <MusicControls />
     </div>
   );
 }

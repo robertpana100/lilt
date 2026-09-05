@@ -40,6 +40,7 @@ export type RhythmLuteTechnique = "chords" | "drone";
 export interface MusicRoot {
   id: string;
   name: string;
+  description: string;
   theme: string;
   mode: MusicMode;
   meter: MusicMeter;

@@ -8,10 +8,12 @@ export function Disclosure({
   title,
   children,
   compact = false,
+  description,
 }: {
   title: string;
   children: ReactNode;
   compact?: boolean;
+  description?: string;
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
@@ -19,12 +21,21 @@ export function Disclosure({
     <div {...stylex.props(styles.root, !compact && styles.divided)}>
       <button
         type="button"
+        aria-label={title}
         aria-expanded={open}
         aria-controls={id}
+        aria-describedby={description ? `${id}-description` : undefined}
         onClick={() => setOpen(!open)}
         {...stylex.props(controlStyles.focus, styles.trigger, compact && styles.compact)}
       >
-        {title}
+        <span {...stylex.props(styles.label)}>
+          {title}
+          {description && (
+            <span id={`${id}-description`} {...stylex.props(styles.description)}>
+              {description}
+            </span>
+          )}
+        </span>
         <svg viewBox="0 0 16 16" aria-hidden="true" {...stylex.props(styles.chevron, open && styles.open)}>
           <path d="m6 4 4 4-4 4" />
         </svg>
@@ -45,7 +56,7 @@ const styles = stylex.create({
     justifyContent: "space-between",
     gap: space.sm,
     width: "100%",
-    paddingBlock: space.lg,
+    paddingBlock: space.md,
     paddingInline: 0,
     borderWidth: 0,
     borderRadius: 2,
@@ -63,6 +74,8 @@ const styles = stylex.create({
     fontSize: 12,
     fontWeight: 400,
   },
+  label: { display: "flex", flexDirection: "column", gap: space.xs },
+  description: { fontSize: 12, fontWeight: 400, color: colors.muted, lineHeight: 1.5 },
   chevron: {
     width: 14,
     height: 14,

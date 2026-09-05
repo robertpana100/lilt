@@ -1,6 +1,6 @@
 import { AppearanceControl } from "@/appearance/AppearanceControl";
 import { ProceduralMusic } from "@/audio/ProceduralMusic";
-import { PlayerMusicControls } from "@/components/music/PlayerMusicControls";
+import { MusicStudio } from "@/components/music/MusicStudio";
 import { NotificationBanner } from "./notifications/NotificationBanner";
 import { useSystemMediaArtwork } from "./useSystemMediaArtwork";
 import * as stylex from "@stylexjs/stylex";
@@ -24,7 +24,7 @@ export function App() {
         <AppearanceControl />
       </header>
       <main id="studio" tabIndex={-1}>
-        <PlayerMusicControls />
+        <MusicStudio />
       </main>
       <NotificationBanner />
     </>
@@ -35,7 +35,7 @@ const styles = stylex.create({
   header: {
     maxWidth: 880,
     marginInline: "auto",
-    paddingBlock: space.xl,
+    paddingBlock: space.lg,
     paddingInline: { default: space.xxl, "@media (max-width: 640px)": space.xl, "@media (max-width: 380px)": space.lg },
     display: "flex",
     alignItems: "center",

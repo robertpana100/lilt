@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { getMusicApplication } from "@/audio/application";
-import { MusicEffectsSection } from "./MusicEffectsSection";
+import { EffectsControls } from "./EffectsControls";
 
 const EFFECTS = [
   ["tone", "Tone", 2],
@@ -22,7 +22,7 @@ describe("effect controls", () => {
   afterEach(cleanup);
 
   test.each(EFFECTS)("reveals only enabled %s parameters and keeps their values when hidden", (id, name, count) => {
-    render(<MusicEffectsSection />);
+    render(<EffectsControls />);
     expect(screen.queryAllByRole("slider")).toHaveLength(0);
     const group = within(screen.getByRole("group", { name: `${name} effect` }));
     const checkbox = group.getByRole("switch");
@@ -43,14 +43,14 @@ describe("effect controls", () => {
 
   test("bypass hides parameters and restores the configured effects when released", () => {
     getMusicApplication().session.setEffect("tone", { enabled: true, lowGainDb: 4 });
-    render(<MusicEffectsSection />);
-    const bypass = screen.getByRole("switch", { name: "Bypass all music effects" });
+    render(<EffectsControls />);
+    const bypass = screen.getByRole("switch", { name: "Effects enabled" });
     fireEvent.click(bypass);
     expect(getMusicApplication().session.getState().effects.bypassed).toBe(true);
     expect(screen.queryAllByRole("slider")).toHaveLength(0);
-    expect((screen.getByRole("switch", { name: "Enable music Tone" }) as HTMLInputElement).disabled).toBe(true);
+    expect((screen.getByRole("switch", { name: "Tone" }) as HTMLInputElement).disabled).toBe(true);
     fireEvent.click(bypass);
-    expect((screen.getByRole("slider", { name: "Music effect Low shelf" }) as HTMLInputElement).valueAsNumber).toBe(4);
+    expect((screen.getByRole("slider", { name: "Bass" }) as HTMLInputElement).valueAsNumber).toBe(4);
     fireEvent.click(screen.getByRole("button", { name: "Reset effects" }));
     expect(getMusicApplication().session.getState().effects.tone.lowGainDb).toBe(0);
   });

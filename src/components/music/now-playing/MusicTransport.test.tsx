@@ -32,7 +32,7 @@ describe("explicit playback", () => {
     fireEvent.click(screen.getByRole("button", { name: "Randomize song" }));
     expect(mocks.randomize).toHaveBeenCalledOnce();
     expect(mocks.newComposition).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole("button", { name: "New composition" }));
+    fireEvent.click(screen.getByRole("button", { name: "New track" }));
     expect(mocks.newComposition).toHaveBeenCalledOnce();
     expect(mocks.randomize).toHaveBeenCalledOnce();
     expect(mocks.unlock).not.toHaveBeenCalled();

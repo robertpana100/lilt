@@ -6,7 +6,7 @@ import type { MusicRuntimeSnapshot } from "@/audio/playback/types";
 import { MusicCoverArt } from "../MusicCoverArt";
 import { LuteLineup } from "../LuteLineup";
 import { musicStatusLabel } from "../format";
-import { midiLabel } from "../workbench/music-labels";
+import { noteName } from "../music-labels";
 import { MusicTransport } from "./MusicTransport";
 import { TrackProgress } from "./TrackProgress";
 
@@ -41,14 +41,9 @@ export function NowPlayingCard({
       <div {...stylex.props(styles.trackDetails)}>
         <Disclosure title="Track details" compact>
           <p>
-            {MUSIC_FORM_LABELS[runtime.form]} · {root.meter} · {midiLabel(runtime.tonicMidi)}
+            {MUSIC_FORM_LABELS[runtime.form]} · {root.meter} · {noteName(runtime.tonicMidi)} {root.mode}
           </p>
           <LuteLineup lineup={runtime.lineup} />
-          <p>
-            Piece {runtime.pieceIndex + 1} · Section {runtime.sectionId ?? "—"} · Next pause{" "}
-            {runtime.gapSeconds.toFixed(1)}s
-          </p>
-          <p>Composition seed: {runtime.compositionSeed}</p>
         </Disclosure>
       </div>
       {runtime.status === "error" && (

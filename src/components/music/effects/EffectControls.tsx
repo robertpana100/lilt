@@ -1,10 +1,10 @@
 import * as stylex from "@stylexjs/stylex";
-import { styles } from "@/components/music/styles";
+import { styles } from "./styles";
 import type { ReactNode } from "react";
 import { Switch } from "@/components/ui/Switch";
 import { RangeField } from "@/components/ui/RangeField";
 
-export function MusicEffectSlider({
+export function EffectSlider({
   label,
   ariaLabel,
   value,
@@ -29,7 +29,7 @@ export function MusicEffectSlider({
   return (
     <RangeField
       label={label}
-      ariaLabel={ariaLabel ?? `Music effect ${label}`}
+      ariaLabel={ariaLabel ?? label}
       value={value}
       min={minimum}
       max={maximum}
@@ -41,7 +41,7 @@ export function MusicEffectSlider({
   );
 }
 
-export function MusicEffectBlock({
+export function EffectBlock({
   name,
   enabled,
   bypassed,
@@ -56,13 +56,7 @@ export function MusicEffectBlock({
 }) {
   return (
     <div role="group" aria-label={`${name} effect`} {...stylex.props(styles.effectRow)}>
-      <Switch
-        label={name}
-        ariaLabel={`Enable music ${name}`}
-        checked={enabled}
-        disabled={bypassed}
-        onCheckedChange={onEnabledChange}
-      />
+      <Switch label={name} ariaLabel={name} checked={enabled} disabled={bypassed} onCheckedChange={onEnabledChange} />
       {enabled && !bypassed && <div {...stylex.props(styles.effectParameters)}>{children}</div>}
     </div>
   );

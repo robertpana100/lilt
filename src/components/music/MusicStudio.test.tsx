@@ -1,9 +1,9 @@
 import "@/test/register-dom";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import { act, cleanup, render, screen } from "@testing-library/react";
-import { getMusicSettings, setMusicControlMode } from "@/audio/musicSettings";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { getMusicSettings } from "@/audio/musicSettings";
 import { reloadMusicSettingsFromStorage } from "@/test/music-settings";
-import { PlayerMusicControls } from "./PlayerMusicControls";
+import { MusicStudio } from "./MusicStudio";
 
 describe("Lilt studio", () => {
   beforeEach(() => {
@@ -12,7 +12,7 @@ describe("Lilt studio", () => {
   });
   afterEach(cleanup);
   async function renderStudio() {
-    render(<PlayerMusicControls />);
+    render(<MusicStudio />);
     await act(async () => {});
   }
   test("starts quietly with an accessible player and generated cover", async () => {
@@ -27,13 +27,11 @@ describe("Lilt studio", () => {
     expect(screen.queryByRole("button", { name: /MIDI/ })).toBeNull();
     expect(screen.queryByLabelText("Show music in system controls")).toBeNull();
   });
-  test("keeps the automatic player free of manual controls", async () => {
+  test("keeps settings accessible without an extra mode selector", async () => {
     await renderStudio();
-    expect(screen.queryByRole("combobox", { name: "Music root" })).toBeNull();
-    act(() => {
-      setMusicControlMode("override");
-    });
-    expect((screen.getByRole("combobox", { name: "Music root" }) as HTMLButtonElement).disabled).toBe(false);
-    expect(screen.queryByRole("button", { name: "Random atmosphere" })).toBeNull();
+    expect(screen.getByRole("combobox", { name: "Style" })).toBeTruthy();
+    expect(screen.queryByRole("combobox", { name: "Music direction" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Melody" }));
+    expect(screen.getByRole("switch", { name: "Play melody" })).toBeTruthy();
   });
 });

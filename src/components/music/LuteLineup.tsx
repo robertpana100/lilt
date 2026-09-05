@@ -8,7 +8,7 @@ export function LuteLineup({ lineup }: { lineup: readonly MusicLuteLineupEntry[]
     <ul {...stylex.props(styles.lineup)}>
       {lineup.map((entry) => (
         <li key={entry.part}>
-          {entry.part === "strings" ? "Lead lute" : "Rhythm lute"} · {getLuteStyle(entry.style).name} ·{" "}
+          {entry.part === "strings" ? "Melody" : "Accompaniment"} · {getLuteStyle(entry.style).name} ·{" "}
           {LUTE_TECHNIQUE_NAMES[entry.technique]}
         </li>
       ))}

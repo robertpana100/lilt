@@ -26,12 +26,12 @@ export type {
 export const PULSES_PER_QUARTER = 24;
 
 export const MUSIC_FORM_LABELS: Readonly<Record<MusicPieceForm, string>> = {
-  strophic: "Strophic song",
-  "paired-puncta": "Paired puncta",
-  "refrain-verse": "Refrain and verse",
-  ballata: "Ballata",
-  ostinato: "Ostinato dance",
-  "through-composed": "Through-composed",
+  strophic: "Verse with return",
+  "paired-puncta": "Repeated pairs",
+  "refrain-verse": "Verse and refrain",
+  ballata: "Framed refrain",
+  ostinato: "Repeating motif",
+  "through-composed": "Evolving melody",
 };
 
 export const MUSIC_PARTS = ["strings", "rhythm"] as const satisfies NonEmptyReadonlyArray<MusicPart>;
@@ -130,7 +130,8 @@ const FORCEFUL_CADENCES: MusicStyleProfile["cadences"] = {
 export const MUSIC_ROOTS = [
   {
     id: "hearth",
-    name: "By the Hearth",
+    name: "Gentle",
+    description: "Soft, flowing phrases in a lilting rhythm.",
     theme: "calm",
     mode: "dorian",
     meter: "6/8",
@@ -154,7 +155,8 @@ export const MUSIC_ROOTS = [
   },
   {
     id: "road",
-    name: "The Open Road",
+    name: "Upbeat",
+    description: "Brisk, repeating phrases with a steady strum.",
     theme: "adventure",
     mode: "dorian",
     meter: "6/8",
@@ -184,7 +186,8 @@ export const MUSIC_ROOTS = [
   },
   {
     id: "revelry",
-    name: "Common Revelry",
+    name: "Celebratory",
+    description: "Bright melodies and lively dance rhythms.",
     theme: "joy",
     mode: "mixolydian",
     meter: "2/4",
@@ -214,7 +217,8 @@ export const MUSIC_ROOTS = [
   },
   {
     id: "lament",
-    name: "The Empty Chair",
+    name: "Melancholy",
+    description: "Slow, sparse melodies in a minor mode.",
     theme: "sadness",
     mode: "aeolian",
     meter: "3/4",
@@ -238,7 +242,8 @@ export const MUSIC_ROOTS = [
   },
   {
     id: "shadows",
-    name: "Whispers Below",
+    name: "Mysterious",
+    description: "Dark melodies with space between the notes.",
     theme: "dark mystery",
     mode: "phrygian",
     meter: "6/8",
@@ -264,7 +269,8 @@ export const MUSIC_ROOTS = [
   },
   {
     id: "brawl",
-    name: "Benches Overturned",
+    name: "Intense",
+    description: "Fast, insistent rhythms and forceful phrases.",
     theme: "fight",
     mode: "dorian",
     meter: "2/4",
@@ -293,7 +299,8 @@ export const MUSIC_ROOTS = [
   },
   {
     id: "courtly",
-    name: "At the High Window",
+    name: "Lyrical",
+    description: "Long, expressive phrases in triple time.",
     theme: "courtly longing",
     mode: "dorian",
     meter: "3/4",
@@ -317,7 +324,8 @@ export const MUSIC_ROOTS = [
   },
   {
     id: "pilgrimage",
-    name: "Pilgrims at Dawn",
+    name: "Ceremonial",
+    description: "Measured phrases with a steady, rolling pulse.",
     theme: "resolve and ceremony",
     mode: "mixolydian",
     meter: "6/8",
@@ -347,7 +355,8 @@ export const MUSIC_ROOTS = [
   },
   {
     id: "guildhall",
-    name: "Spring in the Guildhall",
+    name: "Graceful",
+    description: "Light, ornamented melodies in triple time.",
     theme: "civic grace",
     mode: "mixolydian",
     meter: "3/4",

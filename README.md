@@ -39,21 +39,41 @@ The app shell owns cover-art colors, system-media artwork, and notifications.
 
 ## Studio
 
-Automatic mode shows the player and direction selector. Choose **Manual** to
-reveal atmosphere, tempo, variety, humanization, and effects. Effect parameters
-appear only while their effect is enabled; bypass hides the parameters while
-preserving their settings. Composition details and instruments
-live in collapsed sections with keyboard-accessible disclosure buttons.
+The player keeps listening controls together, with **Style** and **Tempo** directly
+below. Style names describe the music: Gentle, Upbeat, Celebratory, Melancholy,
+Mysterious, Intense, Lyrical, Ceremonial, and Graceful. A short description explains
+each preset. **Automatic** picks a different style and its tempo for each track;
+choosing a named style keeps it for subsequent tracks. Returning to Automatic
+leaves the current track playing. There is no separate manual mode selector.
 
-The player has one set of transport and volume controls. Its seek bar supports
-pointer and keyboard input during playback; track metadata is under **Track
-details**. System playback controls are available automatically where supported.
+Four collapsed sections keep detailed choices out of the way:
 
-**Randomize** chooses a different atmosphere and a fresh random seed, resetting
-the form and key locks. It works during playback or while paused. The system
-Next Track action uses the same randomizer. **New composition**, beside it,
-generates a fresh song while keeping the current effects, atmosphere, tempo, and form/key settings.
-Both buttons have short captions and native tooltips explaining the difference.
+- **Melody** — song structure, key, melodic variation, and added harmony.
+- **Accompaniment** — the second lute's volume, rhythmic activity, and chords.
+- **Effects** — tone, saturation, chorus, tremolo, echo, and reverb.
+- **Playback** — continuous playback and natural variation in timing and touch.
+
+Controls appear only when relevant: muted parts hide their settings, zero added
+harmony hides chord size and strum spacing, and styles with one song structure
+omit the structure selector. Effect parameters appear only while enabled;
+switching effects off preserves their settings. All sections remain available
+with Automatic style. Seeds and separate variation/performance actions are no
+longer exposed in the interface.
+
+`MusicStudio` composes the player and `MusicControls`. Focused components in
+`src/components/music/controls` own each group; `ChordControls` shares the two
+lutes' voicing fields. Effects and their styles live in `music/effects`.
+The underlying generator identifiers remain stable.
+
+The seek bar supports pointer and keyboard input during playback; musical metadata
+is under **Track details**. System playback controls are available automatically
+where supported.
+
+**Randomize** chooses a different style, a fresh seed, and varied effects, resetting
+tempo, song structure, and key choices. It works while playing or paused. The
+system Next Track action uses the same randomizer. **New track**, beside it,
+generates fresh music while keeping the current style, effects, tempo, and musical
+choices. Both buttons have short captions and tooltips explaining the difference.
 
 Session controls reset on reload. Played tracks are not saved, and MIDI export
 is not available.

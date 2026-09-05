@@ -7,6 +7,7 @@ export function PercentSlider({
   value,
   maximum = 1,
   disabled,
+  description,
   onChange,
 }: {
   label: string;
@@ -14,6 +15,7 @@ export function PercentSlider({
   value: number;
   maximum?: number;
   disabled?: boolean;
+  description?: string;
   onChange: (value: number) => void;
 }) {
   return (
@@ -24,6 +26,7 @@ export function PercentSlider({
       max={maximum * 100}
       display={`${Math.round(value * 100)}%`}
       disabled={disabled}
+      description={description}
       onChange={(next) => onChange(next / 100)}
     />
   );

@@ -53,21 +53,21 @@ export function MusicTransport({ enabled, volume }: { enabled: boolean; volume: 
       <div {...stylex.props(styles.compositionActions)}>
         <Button
           type="button"
-          description="New atmosphere"
+          description="New style & sound"
           aria-label="Randomize song"
-          title="Generate a fresh song in a different atmosphere. Reset tempo and clear form and key locks."
+          title="Generate a new track with a different style and effects. Reset tempo, song structure, and key choices."
           onClick={() => controller.randomize()}
         >
           Randomize
         </Button>
         <Button
           type="button"
-          description="Keep settings"
-          aria-label="New composition"
-          title="Generate a fresh song while keeping the current effects, atmosphere, tempo, and form and key settings."
+          description="Keep style & sound"
+          aria-label="New track"
+          title="Generate a new track with the current style, effects, tempo, song structure, and key choices."
           onClick={() => controller.newComposition()}
         >
-          New composition
+          New track
         </Button>
       </div>
     </div>

@@ -1,43 +1,37 @@
 import { Button } from "@/components/ui/Button";
 import * as stylex from "@stylexjs/stylex";
-import { styles } from "@/components/music/styles";
+import { styles } from "./styles";
 import { ECHO_LIMITS } from "@/audio/synthesis/effects/config";
 import { useMusicRuntime, useMusicSession, useMusicSessionController } from "@/audio/playback/react";
 import { PercentSlider } from "@/components/music/PercentSlider";
 import { Switch } from "@/components/ui/Switch";
-import { MusicEffectBlock, MusicEffectSlider } from "./MusicEffectControls";
+import { EffectBlock, EffectSlider } from "./EffectControls";
 
-export function MusicEffectsSection() {
+export function EffectsControls() {
   const session = useMusicSession();
   const controller = useMusicSessionController();
   const sounding = useMusicRuntime().soundingEffects;
   const bypassed = session.effects.bypassed;
   return (
-    <section {...stylex.props(styles.effects)} aria-labelledby="effects-title">
-      <div {...stylex.props(styles.sectionHeading)}>
-        <h3 id="effects-title" {...stylex.props(styles.sectionTitle)}>
-          Effects
-        </h3>
-        <div {...stylex.props(styles.buttonRow)}>
-          <Switch
-            ariaLabel="Bypass all music effects"
-            label="Bypass"
-            checked={bypassed}
-            onCheckedChange={(enabled) => controller.setEffectsBypassed(enabled)}
-          />
-          <Button type="button" variant="quiet" onClick={() => controller.resetEffects()}>
-            Reset effects
-          </Button>
-        </div>
+    <section aria-label="Effects controls">
+      <div {...stylex.props(styles.heading)}>
+        <Switch
+          label="Effects enabled"
+          checked={!bypassed}
+          onCheckedChange={(enabled) => controller.setEffectsBypassed(!enabled)}
+        />
+        <Button variant="quiet" onClick={() => controller.resetEffects()}>
+          Reset effects
+        </Button>
       </div>
-      <MusicEffectBlock
+      <EffectBlock
         name="Tone"
         enabled={sounding.tone.enabled}
         bypassed={bypassed}
         onEnabledChange={(enabled) => controller.setEffect("tone", { enabled })}
       >
-        <MusicEffectSlider
-          label="Low shelf"
+        <EffectSlider
+          label="Bass"
           value={session.effects.tone.lowGainDb}
           minimum={-12}
           maximum={12}
@@ -45,8 +39,8 @@ export function MusicEffectsSection() {
           unit="dB"
           onChange={(lowGainDb) => controller.setEffect("tone", { lowGainDb })}
         />
-        <MusicEffectSlider
-          label="High shelf"
+        <EffectSlider
+          label="Treble"
           value={session.effects.tone.highGainDb}
           minimum={-12}
           maximum={12}
@@ -54,8 +48,8 @@ export function MusicEffectsSection() {
           unit="dB"
           onChange={(highGainDb) => controller.setEffect("tone", { highGainDb })}
         />
-      </MusicEffectBlock>
-      <MusicEffectBlock
+      </EffectBlock>
+      <EffectBlock
         name="Saturation"
         enabled={sounding.saturation.enabled}
         bypassed={bypassed}
@@ -71,8 +65,8 @@ export function MusicEffectsSection() {
           value={session.effects.saturation.drive}
           onChange={(drive) => controller.setEffect("saturation", { drive })}
         />
-      </MusicEffectBlock>
-      <MusicEffectBlock
+      </EffectBlock>
+      <EffectBlock
         name="Chorus"
         enabled={sounding.chorus.enabled}
         bypassed={bypassed}
@@ -83,7 +77,7 @@ export function MusicEffectsSection() {
           value={session.effects.chorus.mix}
           onChange={(mix) => controller.setEffect("chorus", { mix })}
         />
-        <MusicEffectSlider
+        <EffectSlider
           label="Rate"
           value={session.effects.chorus.rateHz}
           minimum={0.05}
@@ -92,7 +86,7 @@ export function MusicEffectsSection() {
           unit="Hz"
           onChange={(rateHz) => controller.setEffect("chorus", { rateHz })}
         />
-        <MusicEffectSlider
+        <EffectSlider
           label="Depth"
           value={session.effects.chorus.depthMs}
           minimum={0}
@@ -101,8 +95,8 @@ export function MusicEffectsSection() {
           unit="ms"
           onChange={(depthMs) => controller.setEffect("chorus", { depthMs })}
         />
-      </MusicEffectBlock>
-      <MusicEffectBlock
+      </EffectBlock>
+      <EffectBlock
         name="Tremolo"
         enabled={sounding.tremolo.enabled}
         bypassed={bypassed}
@@ -113,7 +107,7 @@ export function MusicEffectsSection() {
           value={session.effects.tremolo.depth}
           onChange={(depth) => controller.setEffect("tremolo", { depth })}
         />
-        <MusicEffectSlider
+        <EffectSlider
           label="Rate"
           value={session.effects.tremolo.rateHz}
           minimum={0.2}
@@ -122,8 +116,8 @@ export function MusicEffectsSection() {
           unit="Hz"
           onChange={(rateHz) => controller.setEffect("tremolo", { rateHz })}
         />
-      </MusicEffectBlock>
-      <MusicEffectBlock
+      </EffectBlock>
+      <EffectBlock
         name="Echo"
         enabled={sounding.echo.enabled}
         bypassed={bypassed}
@@ -135,7 +129,7 @@ export function MusicEffectsSection() {
           value={session.effects.echo.mix}
           onChange={(mix) => controller.setEffect("echo", { mix })}
         />
-        <MusicEffectSlider
+        <EffectSlider
           label="Time"
           value={session.effects.echo.delaySeconds}
           minimum={0.06}
@@ -145,13 +139,13 @@ export function MusicEffectsSection() {
           onChange={(delaySeconds) => controller.setEffect("echo", { delaySeconds })}
         />
         <PercentSlider
-          label="Feedback"
+          label="Repeats"
           maximum={ECHO_LIMITS.maxFeedback}
           value={session.effects.echo.feedback}
           onChange={(feedback) => controller.setEffect("echo", { feedback })}
         />
-      </MusicEffectBlock>
-      <MusicEffectBlock
+      </EffectBlock>
+      <EffectBlock
         name="Reverb"
         enabled={sounding.reverb.enabled}
         bypassed={bypassed}
@@ -162,7 +156,7 @@ export function MusicEffectsSection() {
           value={session.effects.reverb.mix}
           onChange={(mix) => controller.setEffect("reverb", { mix })}
         />
-        <MusicEffectSlider
+        <EffectSlider
           label="Decay"
           value={session.effects.reverb.decaySeconds}
           minimum={0.2}
@@ -171,7 +165,7 @@ export function MusicEffectsSection() {
           unit="s"
           onChange={(decaySeconds) => controller.setEffect("reverb", { decaySeconds })}
         />
-      </MusicEffectBlock>
+      </EffectBlock>
     </section>
   );
 }

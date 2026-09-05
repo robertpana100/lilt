@@ -12,6 +12,7 @@ export function RangeField({
   step = 1,
   display,
   disabled,
+  description,
   onChange,
 }: {
   label: string;
@@ -22,6 +23,7 @@ export function RangeField({
   step?: number;
   display: string;
   disabled?: boolean;
+  description?: string;
   onChange: (value: number) => void;
 }) {
   const id = useId();
@@ -37,6 +39,7 @@ export function RangeField({
         id={id}
         aria-label={ariaLabel}
         aria-valuetext={display}
+        aria-describedby={description ? `${id}-hint` : undefined}
         min={min}
         max={max}
         step={step}
@@ -44,12 +47,18 @@ export function RangeField({
         disabled={disabled}
         onChange={(event) => onChange(event.currentTarget.valueAsNumber)}
       />
+      {description && (
+        <p id={`${id}-hint`} {...stylex.props(styles.hint)}>
+          {description}
+        </p>
+      )}
     </div>
   );
 }
 
 const styles = stylex.create({
   field: { minWidth: 0 },
+  hint: { color: colors.muted, fontSize: 12, lineHeight: 1.5 },
   heading: { display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: space.sm, fontSize: 12 },
   value: { color: colors.muted, fontSize: 11, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" },
 });
