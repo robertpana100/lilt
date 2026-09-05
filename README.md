@@ -1,103 +1,67 @@
 # Lilt
 
-Lilt is a standalone procedural music generator extracted from The City Remembers.
-It composes and synthesizes original lute duets locally. No game runtime, sample
-libraries, accounts, or remote generation services are needed.
+Lilt composes and plays lute duets in your browser. Every note is synthesized
+locally using Karplus-Strong synthesis. There are no recorded instrument samples
+or remote generation services.
 
-## Development
+![Lilt player with style, tempo, melody, accompaniment, effects, and playback controls](docs/screenshot.png)
 
-Use Node 22.18+ and npm.
+## How Karplus-Strong works
+
+Karplus-Strong turns a short burst of noise into the sound of a plucked string.
+
+1. Fill a short audio buffer with noise. This is the initial pluck.
+2. Read the buffer in a loop. Its length sets the approximate pitch: a shorter
+   loop produces a higher note, and a longer loop produces a lower one.
+3. Smooth and slightly reduce the signal each time it passes through the loop.
+   Write the result back into the buffer and keep going.
+
+The repetition gives the noise a pitch. Smoothing removes high frequencies,
+while the reduction makes the note fade. The result starts bright and becomes
+softer and quieter, like a vibrating string losing energy.
+
+The starting buffer length is roughly `sample rate / frequency`. At 44,100 samples
+per second, a 440 Hz note needs about 100 samples. Our implementation also adjusts
+the length for the delay introduced by the smoothing filter.
+
+## How we get a lute sound
+
+The basic loop gives us a plucked string. We add a few details to give it the
+character of a lute:
+
+- **Paired strings.** Each note uses two strings, forming a course. They have
+  slightly different tuning and separate noise patterns, creating a gentle
+  shimmer when mixed together.
+- **Pluck position.** We subtract a shifted copy of the initial noise from itself.
+  The offset represents where the string is plucked and changes which harmonics
+  stand out.
+- **Brightness and decay.** We shape both the initial noise and the feedback loop
+  to control how sharp the attack sounds and how quickly the string loses energy.
+- **Body resonance.** Two resonant filters emphasize selected frequencies to
+  suggest the wooden body around the strings.
+- **Playing feel.** Chord notes can start a few milliseconds apart to create a
+  strum. Notes ring through rests and overlap later plucks. Natural timing adds
+  small changes in timing, note length, and volume.
+
+Renaissance lute, gittern, and oud profiles use the same string model with
+different settings for tuning, pluck position, brightness, decay, and resonance.
+Effects such as reverb and echo are applied afterward.
+
+The string model lives in
+[procedural-lute.ts](src/audio/synthesis/procedural-lute.ts). Strumming lives in
+[lute-performance.ts](src/audio/synthesis/lute-performance.ts), and note timing
+and sustain live in [event-renderer.ts](src/audio/synthesis/event-renderer.ts).
+
+## Run locally
+
+Use Node 22.18 or later and npm.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open http://127.0.0.1:5174. `npm run build` produces `dist/` and
-`npm run preview` serves that build at http://127.0.0.1:4174.
-Playback starts when you press Play; the first visit is quiet. Browser preferences
-stay on that origin, so development and preview have separate settings.
+Open http://127.0.0.1:5174 and press **Play**.
 
-The UI uses React 19, Vite, and [StyleX](https://stylexjs.com). Shared components
-in `src/components/ui` provide buttons, selects, sliders, switches, fields, and
-disclosures with a minimal grayscale appearance. Selects use custom listbox
-menus with arrow-key navigation, type-to-select, and Escape to cancel.
-Menus stay inside the viewport and open upward when needed.
-There is no external component library.
-
-`tokens.stylex.ts` defines the palette, spacing, and control sizing; `theme.ts`
-provides the dark theme. Component styles compile to static CSS through the
-official StyleX Vite plugin. `src/styles.css` contains only document resets.
-Vite and Vitest share compiler settings in `stylex.config.ts`; the tests use
-the Rollup adapter to avoid starting StyleX's browser HMR lifecycle.
-The app shell owns cover-art colors, system-media artwork, and notifications.
-
-- `npm test` — deterministic composition, rendering, playback, settings, and media tests.
-- `npm run typecheck` — application and test types.
-- `npm run lint` — code, React, accessibility, StyleX, and independence checks.
-- `npm run format` / `npm run format:check` — formatting.
-
-## Studio
-
-The player keeps listening controls together, with **Style** and **Tempo** directly
-below. Style names describe the music: Gentle, Upbeat, Celebratory, Melancholy,
-Mysterious, Intense, Lyrical, Ceremonial, and Graceful. A short description explains
-each preset. **Automatic** picks a different style and its tempo for each track;
-choosing a named style keeps it for subsequent tracks. Returning to Automatic
-leaves the current track playing. There is no separate manual mode selector.
-
-Four collapsed sections keep detailed choices out of the way:
-
-- **Melody** — song structure, key, melodic variation, and added harmony.
-- **Accompaniment** — the second lute's volume, rhythmic activity, and chords.
-- **Effects** — tone, saturation, chorus, tremolo, echo, and reverb.
-- **Playback** — continuous playback and natural variation in timing and touch.
-
-Controls appear only when relevant: muted parts hide their settings, zero added
-harmony hides chord size and strum spacing, and styles with one song structure
-omit the structure selector. Effect parameters appear only while enabled;
-switching effects off preserves their settings. All sections remain available
-with Automatic style. Seeds and separate variation/performance actions are no
-longer exposed in the interface.
-
-`MusicStudio` composes the player and `MusicControls`. Focused components in
-`src/components/music/controls` own each group; `ChordControls` shares the two
-lutes' voicing fields. Effects and their styles live in `music/effects`.
-The underlying generator identifiers remain stable.
-
-The seek bar supports pointer and keyboard input during playback; musical metadata
-is under **Track details**. System playback controls are available automatically
-where supported.
-
-**Randomize** chooses a different style, a fresh seed, and varied effects, resetting
-tempo, song structure, and key choices. It works while playing or paused. The
-system Next Track action uses the same randomizer. **New track**, beside it,
-generates fresh music while keeping the current style, effects, tempo, and musical
-choices. Both buttons have short captions and tooltips explaining the difference.
-
-Session controls reset on reload. Played tracks are not saved, and MIDI export
-is not available.
-
-The header offers **Light**, **Dark**, and **System** appearance. The choice persists
-locally, follows OS changes in System mode, and updates both the interface and
-cover art without restarting playback.
-
-## Ownership
-
-`src/audio` owns composition, arrangement, synthesis, effects, playback, settings,
-cover art, and system-media integration. Cover art
-accepts colors from its host; it does not depend on a theme implementation.
-See [audio architecture](src/audio/ARCHITECTURE.md) and
-[extraction boundaries and verification](docs/extraction.md).
-
-This is an independent source extraction, not a linked workspace. The original
-game retains its music; changes in either repository do not propagate to the other.
-Lilt uses its own local-storage namespace and media metadata. Previous game data
-is neither read nor migrated.
-
-## Provenance
-
-The audio implementation and its 227 baseline tests originated in
-`the-city-remembers/packages/game-client/src/audio`. Composition and DSP behavior
-are preserved. Product metadata, browser storage keys, and cover-art color inputs
-are the integration changes made during extraction.
+`npm run build` creates a production build in `dist/`.
+`npm run verify` runs the tests and project checks.
