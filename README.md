@@ -1,6 +1,6 @@
 # Lilt
 
-Lilt composes and plays lute duets in your browser. Every note is synthesized
+Lilt composes and plays lute duets in the browser. Every note is synthesized
 locally using Karplus-Strong synthesis. There are no recorded instrument samples
 or remote generation services.
 
@@ -21,22 +21,22 @@ while the reduction makes the note fade. The result starts bright and becomes
 softer and quieter, like a vibrating string losing energy.
 
 The starting buffer length is roughly `sample rate / frequency`. At 44,100 samples
-per second, a 440 Hz note needs about 100 samples. Our implementation also adjusts
+per second, a 440 Hz note needs about 100 samples. The implementation also adjusts
 the length for the delay introduced by the smoothing filter.
 
-## How we get a lute sound
+## How Lilt creates a lute sound
 
-The basic loop gives us a plucked string. We add a few details to give it the
+The basic loop produces a plucked string sound. Several additions give it the
 character of a lute:
 
 - **Paired strings.** Each note uses two strings, forming a course. They have
   slightly different tuning and separate noise patterns, creating a gentle
   shimmer when mixed together.
-- **Pluck position.** We subtract a shifted copy of the initial noise from itself.
+- **Pluck position.** The renderer subtracts a shifted copy of the initial noise.
   The offset represents where the string is plucked and changes which harmonics
   stand out.
-- **Brightness and decay.** We shape both the initial noise and the feedback loop
-  to control how sharp the attack sounds and how quickly the string loses energy.
+- **Brightness and decay.** Filtering shapes both the initial noise and the
+  feedback loop, controlling the sharpness of the attack and the loss of energy.
 - **Body resonance.** Two resonant filters emphasize selected frequencies to
   suggest the wooden body around the strings.
 - **Playing feel.** Chord notes can start a few milliseconds apart to create a
@@ -54,7 +54,7 @@ and sustain live in [event-renderer.ts](src/audio/synthesis/event-renderer.ts).
 
 ## Run locally
 
-Use Node 22.18 or later and npm.
+Use the latest Node.js release and npm.
 
 ```sh
 npm ci
