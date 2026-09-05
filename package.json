@@ -8,13 +8,15 @@
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:browser": "playwright test",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "dev": "vite",
     "build": "npm run typecheck && vite build",
     "preview": "vite preview",
-    "verify": "npm run typecheck && npm test && npm run lint && npm run format:check && npm run build && git diff --check"
+    "verify": "npm test && npm run lint && npm run format:check && npm run build && git diff --check"
   },
   "dependencies": {
     "@stylexjs/stylex": "0.19.0",
@@ -24,12 +26,14 @@
   "devDependencies": {
     "@eslint/js": "9.39.5",
     "@happy-dom/global-registrator": "20.11.2",
+    "@playwright/test": "1.63.0",
     "@stylexjs/unplugin": "0.19.0",
     "@testing-library/react": "16.3.2",
     "@types/node": "26.2.0",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
     "@vitejs/plugin-react": "6.0.5",
+    "@vitest/coverage-v8": "4.1.10",
     "eslint": "9.39.5",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.9.0",

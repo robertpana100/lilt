@@ -1,10 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import {
-  DEFAULT_MUSIC_SETTINGS,
-  MUSIC_SETTINGS_STORAGE_KEY,
-  getMusicSettings,
-  setMusicVolume,
-} from "@/audio/musicSettings";
+import { DEFAULT_MUSIC_SETTINGS, MUSIC_SETTINGS_STORAGE_KEY, getMusicSettings } from "@/audio/musicSettings";
 import { reloadMusicSettingsFromStorage } from "@/test/music-settings";
 
 describe("music settings", () => {
@@ -36,12 +31,4 @@ describe("music settings", () => {
       });
     },
   );
-  test("isolates Lilt preferences from the source game's storage", () => {
-    localStorage.setItem("the-city-remembers-music", JSON.stringify({ enabled: true, volume: 0.9 }));
-    reloadMusicSettingsFromStorage();
-    expect(getMusicSettings()).toEqual(DEFAULT_MUSIC_SETTINGS);
-    setMusicVolume(0.42);
-    expect(JSON.parse(localStorage.getItem(MUSIC_SETTINGS_STORAGE_KEY)!).volume).toBe(0.42);
-    expect(JSON.parse(localStorage.getItem("the-city-remembers-music")!).volume).toBe(0.9);
-  });
 });

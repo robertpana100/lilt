@@ -120,11 +120,13 @@ describe("music synth worklet", () => {
       throw new Error("unsupported");
     });
     vi.stubGlobal("AudioWorkletNode", class {});
+    vi.stubGlobal("Worker", class {});
     const synth = new MusicSynth(context.context, {} as AudioNode);
 
     await expect(synth.prepare()).resolves.toBeUndefined();
     synth.playLute("oud", "melody", 57, 0, 0.5, 0.2, 0, 9, null);
 
+    expect(context.context.audioWorklet.addModule).toHaveBeenCalledOnce();
     expect(context.createBuffer).toHaveBeenCalledOnce();
   });
 

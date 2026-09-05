@@ -58,3 +58,17 @@ and sustain live in [event-renderer.ts](src/audio/synthesis/event-renderer.ts).
 npm ci
 npm run dev
 ```
+
+## Tests
+
+`npm test` runs the unit and component tests. `npm run test:coverage` also writes
+an HTML coverage report to `coverage/index.html`. `npm run verify` runs the local
+tests, lint, formatting checks, and production build.
+
+The browser smoke test checks real audio playback, pause, and resume against a
+production build. Install Chromium once, then run it separately:
+
+```sh
+npx playwright install chromium --only-shell
+npm run test:browser
+```

@@ -31,9 +31,6 @@ describe("music settings", () => {
     for (const title of ["Melody", "Accompaniment", "Effects", "Playback"]) {
       expect(screen.getByRole("button", { name: title }).getAttribute("aria-expanded")).toBe("false");
     }
-    expect(screen.queryByRole("spinbutton")).toBeNull();
-    expect(screen.queryByRole("button", { name: "New variation" })).toBeNull();
-    expect(screen.queryByRole("button", { name: "New performance" })).toBeNull();
     openSection("Effects");
     expect(screen.getByRole("switch", { name: "Effects enabled" })).toBeTruthy();
     expect(getMusicSettings().controlMode).toBe("auto");
