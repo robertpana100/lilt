@@ -1,6 +1,12 @@
+import { Button } from "@/components/ui/Button";
+import { Select } from "@/components/ui/Select";
+import { Field } from "@/components/ui/Field";
+import * as stylex from "@stylexjs/stylex";
+import { styles } from "@/components/music/styles";
 import { getMusicRoot, MUSIC_FORM_LABELS, type MusicPieceForm } from "@/audio/composition/roots";
 import { useMusicSession, useMusicSessionController } from "@/audio/playback/react";
-import { NumberField, CheckboxField } from "./ControlFields";
+import { NumberField } from "@/components/ui/NumberField";
+import { Switch } from "@/components/ui/Switch";
 import { midiLabel } from "./music-labels";
 
 export function MusicCompositionSection() {
@@ -9,15 +15,14 @@ export function MusicCompositionSection() {
   const root = getMusicRoot(session.rootId);
   return (
     <>
-      <div className="control-grid">
+      <div {...stylex.props(styles.controlGrid)}>
         <NumberField
           label="Master seed"
           value={session.masterSeed}
           onChange={(seed) => controller.setMasterSeed(seed)}
         />
-        <label className="field">
-          Form
-          <select
+        <Field label="Form">
+          <Select
             aria-label="Music form lock"
             value={session.formOverride ?? "auto"}
             onChange={(event) =>
@@ -32,11 +37,10 @@ export function MusicCompositionSection() {
                 {MUSIC_FORM_LABELS[form]}
               </option>
             ))}
-          </select>
-        </label>
-        <label className="field">
-          Key
-          <select
+          </Select>
+        </Field>
+        <Field label="Key">
+          <Select
             aria-label="Music tonic lock"
             value={session.tonicOverride?.toString() ?? "auto"}
             onChange={(event) =>
@@ -51,22 +55,22 @@ export function MusicCompositionSection() {
                 {midiLabel(tonic)}
               </option>
             ))}
-          </select>
-        </label>
-        <CheckboxField
+          </Select>
+        </Field>
+        <Switch
           label="Continue to the next piece"
           ariaLabel="Automatic next music piece"
           checked={session.autoAdvance}
           onCheckedChange={(enabled) => controller.setAutoAdvance(enabled)}
         />
       </div>
-      <div className="button-row">
-        <button type="button" onClick={() => controller.newVariation()}>
+      <div {...stylex.props(styles.buttonRow)}>
+        <Button type="button" onClick={() => controller.newVariation()}>
           New variation
-        </button>
-        <button type="button" onClick={() => controller.newPerformance()}>
+        </Button>
+        <Button type="button" onClick={() => controller.newPerformance()}>
           New performance
-        </button>
+        </Button>
       </div>
     </>
   );

@@ -1,11 +1,13 @@
+import { Select } from "@/components/ui/Select";
+import { Field } from "@/components/ui/Field";
 import { getAppearanceStore, useAppearance } from "./browser";
 
 export function AppearanceControl() {
   const { preference } = useAppearance();
   return (
-    <label className="inline-field appearance-control">
-      Appearance
-      <select
+    <Field label="Appearance" inline compact>
+      <Select
+        aria-label="Appearance"
         value={preference}
         onChange={(event) => {
           const next = event.currentTarget.value;
@@ -15,7 +17,7 @@ export function AppearanceControl() {
         <option value="system">System</option>
         <option value="light">Light</option>
         <option value="dark">Dark</option>
-      </select>
-    </label>
+      </Select>
+    </Field>
   );
 }

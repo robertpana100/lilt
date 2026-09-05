@@ -1,7 +1,10 @@
+import { Button } from "@/components/ui/Button";
+import * as stylex from "@stylexjs/stylex";
+import { styles } from "@/components/music/styles";
 import { ECHO_LIMITS } from "@/audio/synthesis/effects/config";
 import { useMusicRuntime, useMusicSession, useMusicSessionController } from "@/audio/playback/react";
 import { PercentSlider } from "@/components/music/PercentSlider";
-import { CheckboxField } from "./ControlFields";
+import { Switch } from "@/components/ui/Switch";
 import { MusicEffectBlock, MusicEffectSlider } from "./MusicEffectControls";
 
 export function MusicEffectsSection() {
@@ -10,19 +13,21 @@ export function MusicEffectsSection() {
   const sounding = useMusicRuntime().soundingEffects;
   const bypassed = session.effects.bypassed;
   return (
-    <section className="effects" aria-labelledby="effects-title">
-      <div className="section-heading">
-        <h3 id="effects-title">Effects</h3>
-        <div className="button-row">
-          <CheckboxField
+    <section {...stylex.props(styles.effects)} aria-labelledby="effects-title">
+      <div {...stylex.props(styles.sectionHeading)}>
+        <h3 id="effects-title" {...stylex.props(styles.sectionTitle)}>
+          Effects
+        </h3>
+        <div {...stylex.props(styles.buttonRow)}>
+          <Switch
             ariaLabel="Bypass all music effects"
             label="Bypass"
             checked={bypassed}
             onCheckedChange={(enabled) => controller.setEffectsBypassed(enabled)}
           />
-          <button type="button" className="text-button" onClick={() => controller.resetEffects()}>
+          <Button type="button" variant="quiet" onClick={() => controller.resetEffects()}>
             Reset effects
-          </button>
+          </Button>
         </div>
       </div>
       <MusicEffectBlock

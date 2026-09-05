@@ -1,3 +1,6 @@
+import { Slider } from "@/components/ui/Slider";
+import * as stylex from "@stylexjs/stylex";
+import { styles } from "@/components/music/styles";
 import { useState } from "react";
 import { useMusicPosition, useMusicRuntime, useMusicSessionController } from "@/audio/playback/react";
 import { durationLabel } from "../format";
@@ -14,11 +17,11 @@ export function TrackProgress({ duration }: { duration: number }) {
     controller.seek(value);
   };
   return (
-    <div className="track-progress">
-      <span>{durationLabel(position)}</span>
-      <input
-        type="range"
+    <div {...stylex.props(styles.trackProgress)}>
+      <span {...stylex.props(styles.progressTime)}>{durationLabel(position)}</span>
+      <Slider
         aria-label="Music position"
+        aria-valuetext={`${durationLabel(position)} of ${durationLabel(duration)}`}
         min={0}
         max={duration || 1}
         step={0.5}
@@ -37,7 +40,7 @@ export function TrackProgress({ duration }: { duration: number }) {
         }}
         onPointerCancel={() => setScrubPosition(null)}
       />
-      <span>{durationLabel(duration)}</span>
+      <span {...stylex.props(styles.progressTime)}>{durationLabel(duration)}</span>
     </div>
   );
 }

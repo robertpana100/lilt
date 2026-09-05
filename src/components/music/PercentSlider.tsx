@@ -1,6 +1,6 @@
-import { RangeField } from "./workbench/ControlFields";
+import { RangeField } from "@/components/ui/RangeField";
 
-/** A native range input backed by a value between zero and one. */
+/** The shared slider backed by a value between zero and one. */
 export function PercentSlider({
   label,
   ariaLabel,

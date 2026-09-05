@@ -8,7 +8,7 @@ vi.mock("@/audio/playback/react", () => ({
 }));
 import { TrackProgress } from "./TrackProgress";
 
-describe("native player seeking", () => {
+describe("player seeking", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.position = 20;

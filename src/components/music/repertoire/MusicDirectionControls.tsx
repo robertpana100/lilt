@@ -1,10 +1,11 @@
+import { Select } from "@/components/ui/Select";
+import { Field } from "@/components/ui/Field";
 import { setMusicControlMode, type MusicSettings } from "@/audio/musicSettings";
 
 export function MusicDirectionControls({ settings }: { settings: MusicSettings }) {
   return (
-    <label className="inline-field">
-      Direction
-      <select
+    <Field label="Direction" inline>
+      <Select
         aria-label="Music direction"
         value={settings.controlMode}
         onChange={(event) => {
@@ -14,7 +15,7 @@ export function MusicDirectionControls({ settings }: { settings: MusicSettings }
       >
         <option value="auto">Automatic</option>
         <option value="override">Manual</option>
-      </select>
-    </label>
+      </Select>
+    </Field>
   );
 }

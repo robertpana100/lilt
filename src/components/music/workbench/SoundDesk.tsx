@@ -1,23 +1,25 @@
+import * as stylex from "@stylexjs/stylex";
+import { styles } from "@/components/music/styles";
 import { useMusicSettings } from "@/audio/musicSettings";
 import { MusicDirectionControls } from "../repertoire/MusicDirectionControls";
 import { MusicPieceSections } from "./MusicPieceSections";
 import { MusicCompositionSection } from "./MusicCompositionSection";
 import { MusicArrangementSections } from "./MusicArrangementSections";
 import { MusicEffectsSection } from "./MusicEffectsSection";
-import { Disclosure } from "./Disclosure";
+import { Disclosure } from "@/components/ui/Disclosure";
 
 export default function SoundDesk() {
   const settings = useMusicSettings();
   return (
-    <section className="workbench" aria-label="Sound controls">
-      <div className="workspace-heading">
+    <section {...stylex.props(styles.workbench)} aria-label="Sound controls">
+      <div {...stylex.props(styles.workspaceHeading)}>
         <MusicDirectionControls settings={settings} />
       </div>
       {settings.controlMode === "override" && (
-        <div className="manual-controls">
+        <div {...stylex.props(styles.manualControls)}>
           <MusicPieceSections />
           <MusicEffectsSection />
-          <div className="advanced-controls">
+          <div {...stylex.props(styles.advancedControls)}>
             <Disclosure title="Composition">
               <MusicCompositionSection />
             </Disclosure>

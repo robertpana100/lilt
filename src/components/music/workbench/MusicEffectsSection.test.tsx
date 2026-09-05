@@ -12,7 +12,7 @@ const EFFECTS = [
   ["reverb", "Reverb", 2],
 ] as const;
 
-describe("native effect controls", () => {
+describe("effect controls", () => {
   beforeEach(() => {
     const application = getMusicApplication();
     application.playback.getRuntimeSnapshot();
@@ -25,7 +25,7 @@ describe("native effect controls", () => {
     render(<MusicEffectsSection />);
     expect(screen.queryAllByRole("slider")).toHaveLength(0);
     const group = within(screen.getByRole("group", { name: `${name} effect` }));
-    const checkbox = group.getByRole("checkbox");
+    const checkbox = group.getByRole("switch");
     fireEvent.click(checkbox);
     expect(getMusicApplication().session.getState().effects[id].enabled).toBe(true);
     expect(group.getAllByRole("slider")).toHaveLength(count);
@@ -44,11 +44,11 @@ describe("native effect controls", () => {
   test("bypass hides parameters and restores the configured effects when released", () => {
     getMusicApplication().session.setEffect("tone", { enabled: true, lowGainDb: 4 });
     render(<MusicEffectsSection />);
-    const bypass = screen.getByRole("checkbox", { name: "Bypass all music effects" });
+    const bypass = screen.getByRole("switch", { name: "Bypass all music effects" });
     fireEvent.click(bypass);
     expect(getMusicApplication().session.getState().effects.bypassed).toBe(true);
     expect(screen.queryAllByRole("slider")).toHaveLength(0);
-    expect((screen.getByRole("checkbox", { name: "Enable music Tone" }) as HTMLInputElement).disabled).toBe(true);
+    expect((screen.getByRole("switch", { name: "Enable music Tone" }) as HTMLInputElement).disabled).toBe(true);
     fireEvent.click(bypass);
     expect((screen.getByRole("slider", { name: "Music effect Low shelf" }) as HTMLInputElement).valueAsNumber).toBe(4);
     fireEvent.click(screen.getByRole("button", { name: "Reset effects" }));

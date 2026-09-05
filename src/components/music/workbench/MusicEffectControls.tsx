@@ -1,5 +1,8 @@
+import * as stylex from "@stylexjs/stylex";
+import { styles } from "@/components/music/styles";
 import type { ReactNode } from "react";
-import { CheckboxField, RangeField } from "./ControlFields";
+import { Switch } from "@/components/ui/Switch";
+import { RangeField } from "@/components/ui/RangeField";
 
 export function MusicEffectSlider({
   label,
@@ -52,15 +55,15 @@ export function MusicEffectBlock({
   children: ReactNode;
 }) {
   return (
-    <div role="group" aria-label={`${name} effect`} className="effect-row">
-      <CheckboxField
+    <div role="group" aria-label={`${name} effect`} {...stylex.props(styles.effectRow)}>
+      <Switch
         label={name}
         ariaLabel={`Enable music ${name}`}
         checked={enabled}
         disabled={bypassed}
         onCheckedChange={onEnabledChange}
       />
-      {enabled && !bypassed && <div className="effect-parameters">{children}</div>}
+      {enabled && !bypassed && <div {...stylex.props(styles.effectParameters)}>{children}</div>}
     </div>
   );
 }

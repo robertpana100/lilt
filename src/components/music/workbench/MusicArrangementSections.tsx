@@ -1,43 +1,48 @@
+import { Button } from "@/components/ui/Button";
+import { Select } from "@/components/ui/Select";
+import { Field } from "@/components/ui/Field";
+import * as stylex from "@stylexjs/stylex";
+import { styles } from "@/components/music/styles";
 import { useMusicSession, useMusicSessionController } from "@/audio/playback/react";
 import { PercentSlider } from "../PercentSlider";
-import { CheckboxField, RangeField } from "./ControlFields";
+import { Switch } from "@/components/ui/Switch";
+import { RangeField } from "@/components/ui/RangeField";
 
 export function MusicArrangementSections() {
   const session = useMusicSession();
   const controller = useMusicSessionController();
   return (
-    <div className="instrument-columns">
-      <section className="instrument" aria-label="Lead lute">
-        <div className="section-heading">
-          <CheckboxField
+    <div {...stylex.props(styles.instrumentColumns)}>
+      <section aria-label="Lead lute">
+        <div {...stylex.props(styles.sectionHeading)}>
+          <Switch
             label="Lead lute"
             ariaLabel="Enable lute strings"
             checked={!session.mutedParts.strings}
             onCheckedChange={(enabled) => controller.setPartMuted("strings", !enabled)}
           />
-          <button type="button" className="text-button" onClick={() => controller.resetChords()}>
+          <Button type="button" variant="quiet" onClick={() => controller.resetChords()}>
             Reset harmony
-          </button>
+          </Button>
         </div>
         {!session.mutedParts.strings && (
-          <div className="control-grid">
+          <div {...stylex.props(styles.instrumentFields)}>
             <PercentSlider
               label="Chord amount"
               ariaLabel="Music chord amount"
               value={session.chords.amount}
               onChange={(amount) => controller.setChords({ amount })}
             />
-            <label className="field">
-              Courses
-              <select
+            <Field label="Courses">
+              <Select
                 aria-label="Music chord maximum courses"
                 value={session.chords.maxCourses}
                 onChange={(event) => controller.setChords({ maxCourses: event.currentTarget.value === "2" ? 2 : 3 })}
               >
                 <option value={2}>2 · Dyads</option>
                 <option value={3}>3 · Triads</option>
-              </select>
-            </label>
+              </Select>
+            </Field>
             <RangeField
               label="Strum spread"
               ariaLabel="Music chord strum spread"
@@ -50,20 +55,20 @@ export function MusicArrangementSections() {
           </div>
         )}
       </section>
-      <section className="instrument" aria-label="Rhythm lute">
-        <div className="section-heading">
-          <CheckboxField
+      <section aria-label="Rhythm lute">
+        <div {...stylex.props(styles.sectionHeading)}>
+          <Switch
             label="Rhythm lute"
             ariaLabel="Enable rhythm lute"
             checked={!session.mutedParts.rhythm}
             onCheckedChange={(enabled) => controller.setPartMuted("rhythm", !enabled)}
           />
-          <button type="button" className="text-button" onClick={() => controller.resetRhythmLute()}>
+          <Button type="button" variant="quiet" onClick={() => controller.resetRhythmLute()}>
             Reset rhythm lute
-          </button>
+          </Button>
         </div>
         {!session.mutedParts.rhythm && (
-          <div className="control-grid">
+          <div {...stylex.props(styles.instrumentFields)}>
             <PercentSlider
               label="Density"
               ariaLabel="Music rhythm lute chord density"
@@ -76,9 +81,8 @@ export function MusicArrangementSections() {
               value={session.rhythmLute.level}
               onChange={(level) => controller.setRhythmLute({ level })}
             />
-            <label className="field">
-              Courses
-              <select
+            <Field label="Courses">
+              <Select
                 aria-label="Music rhythm lute maximum courses"
                 value={session.rhythmLute.maxCourses}
                 onChange={(event) =>
@@ -87,8 +91,8 @@ export function MusicArrangementSections() {
               >
                 <option value={2}>2 · Dyads</option>
                 <option value={3}>3 · Triads</option>
-              </select>
-            </label>
+              </Select>
+            </Field>
             <RangeField
               label="Strum spread"
               ariaLabel="Music rhythm lute strum spread"

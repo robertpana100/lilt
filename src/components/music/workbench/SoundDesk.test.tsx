@@ -6,7 +6,7 @@ import { reloadMusicSettingsFromStorage } from "@/test/music-settings";
 import SoundDesk from "./SoundDesk";
 
 async function openSection(title: string) {
-  fireEvent.click(screen.getByText(title, { selector: "summary" }));
+  fireEvent.click(screen.getByRole("button", { name: title }));
   await act(async () => {});
 }
 
@@ -40,7 +40,7 @@ describe("sound desk", () => {
     expect(getMusicApplication().session.getState()).toBe(before);
   });
 
-  test("edits the real seed, tempo and form through native controls", async () => {
+  test("edits the real seed, tempo and form through shared controls", async () => {
     setMusicControlMode("override");
     render(<SoundDesk />);
     const controller = getMusicApplication().session;
@@ -58,14 +58,14 @@ describe("sound desk", () => {
     expect(controller.getState().formOverride).toBe(option.value);
   });
 
-  test("keeps instrument controls in a closed native disclosure", async () => {
+  test("keeps instrument controls in a closed disclosure", async () => {
     setMusicControlMode("override");
     render(<SoundDesk />);
-    expect(screen.queryByRole("checkbox", { name: "Enable rhythm lute" })).toBeNull();
+    expect(screen.queryByRole("switch", { name: "Enable rhythm lute" })).toBeNull();
     expect(screen.queryByRole("combobox", { name: "Chord audition lute body" })).toBeNull();
     expect(screen.queryByText("Audition")).toBeNull();
     await openSection("Instruments");
-    const control = await screen.findByRole("checkbox", { name: "Enable rhythm lute" });
+    const control = await screen.findByRole("switch", { name: "Enable rhythm lute" });
     const session = getMusicApplication().session;
     const before = session.getState().mutedParts.rhythm;
     fireEvent.click(control);

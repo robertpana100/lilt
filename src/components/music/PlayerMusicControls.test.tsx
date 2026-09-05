@@ -25,7 +25,7 @@ describe("Lilt studio", () => {
     expect(screen.queryByRole("searchbox")).toBeNull();
     expect(screen.queryByText("Library")).toBeNull();
     expect(screen.queryByRole("button", { name: /MIDI/ })).toBeNull();
-    expect(screen.queryByRole("checkbox", { name: "Show music in system controls" })).toBeNull();
+    expect(screen.queryByLabelText("Show music in system controls")).toBeNull();
   });
   test("keeps the automatic player free of manual controls", async () => {
     await renderStudio();
