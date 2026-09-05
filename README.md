@@ -20,8 +20,10 @@ stay on that origin, so development and preview have separate settings.
 
 The UI uses React 19, Vite, and [StyleX](https://stylexjs.com). Shared components
 in `src/components/ui` provide buttons, selects, sliders, switches, fields, and
-disclosures with a minimal grayscale appearance. They retain HTML keyboard and
-form behavior; there is no external component library.
+disclosures with a minimal grayscale appearance. Selects use custom listbox
+menus with arrow-key navigation, type-to-select, and Escape to cancel.
+Menus stay inside the viewport and open upward when needed.
+There is no external component library.
 
 `tokens.stylex.ts` defines the palette, spacing, and control sizing; `theme.ts`
 provides the dark theme. Component styles compile to static CSS through the

@@ -9,15 +9,15 @@ export function AppearanceControl() {
       <Select
         aria-label="Appearance"
         value={preference}
-        onChange={(event) => {
-          const next = event.currentTarget.value;
+        onValueChange={(next) => {
           if (next === "light" || next === "dark" || next === "system") getAppearanceStore().setPreference(next);
         }}
-      >
-        <option value="system">System</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </Select>
+        options={[
+          { value: "system", label: "System" },
+          { value: "light", label: "Light" },
+          { value: "dark", label: "Dark" },
+        ]}
+      />
     </Field>
   );
 }

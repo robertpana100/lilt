@@ -25,37 +25,23 @@ export function MusicCompositionSection() {
           <Select
             aria-label="Music form lock"
             value={session.formOverride ?? "auto"}
-            onChange={(event) =>
-              controller.setFormOverride(
-                event.currentTarget.value === "auto" ? null : (event.currentTarget.value as MusicPieceForm),
-              )
-            }
-          >
-            <option value="auto">Automatic</option>
-            {root.forms.map((form) => (
-              <option key={form} value={form}>
-                {MUSIC_FORM_LABELS[form]}
-              </option>
-            ))}
-          </Select>
+            onValueChange={(value) => controller.setFormOverride(value === "auto" ? null : (value as MusicPieceForm))}
+            options={[
+              { value: "auto", label: "Automatic" },
+              ...root.forms.map((form) => ({ value: form, label: MUSIC_FORM_LABELS[form] })),
+            ]}
+          />
         </Field>
         <Field label="Key">
           <Select
             aria-label="Music tonic lock"
             value={session.tonicOverride?.toString() ?? "auto"}
-            onChange={(event) =>
-              controller.setTonicOverride(
-                event.currentTarget.value === "auto" ? null : Number(event.currentTarget.value),
-              )
-            }
-          >
-            <option value="auto">Automatic</option>
-            {root.safeTonics.map((tonic) => (
-              <option key={tonic} value={tonic}>
-                {midiLabel(tonic)}
-              </option>
-            ))}
-          </Select>
+            onValueChange={(value) => controller.setTonicOverride(value === "auto" ? null : Number(value))}
+            options={[
+              { value: "auto", label: "Automatic" },
+              ...root.safeTonics.map((tonic) => ({ value: String(tonic), label: midiLabel(tonic) })),
+            ]}
+          />
         </Field>
         <Switch
           label="Continue to the next piece"

@@ -18,14 +18,9 @@ export function MusicPieceSections() {
           <Select
             aria-label="Music root"
             value={session.rootId}
-            onChange={(event) => controller.setRoot(event.currentTarget.value as MusicRootId)}
-          >
-            {MUSIC_ROOTS.map((entry) => (
-              <option key={entry.id} value={entry.id}>
-                {entry.name}
-              </option>
-            ))}
-          </Select>
+            onValueChange={(value) => controller.setRoot(value as MusicRootId)}
+            options={MUSIC_ROOTS.map((entry) => ({ value: entry.id, label: entry.name }))}
+          />
         </Field>
         <RangeField
           label="Tempo"

@@ -33,7 +33,7 @@ describe("Lilt studio", () => {
     act(() => {
       setMusicControlMode("override");
     });
-    expect((screen.getByRole("combobox", { name: "Music root" }) as HTMLSelectElement).disabled).toBe(false);
+    expect((screen.getByRole("combobox", { name: "Music root" }) as HTMLButtonElement).disabled).toBe(false);
     expect(screen.queryByRole("button", { name: "Random atmosphere" })).toBeNull();
   });
 });

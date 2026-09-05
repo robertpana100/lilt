@@ -22,20 +22,22 @@ describe("sound desk", () => {
     render(<SoundDesk />);
     const before = getMusicApplication().session.getState();
     const direction = screen.getByRole("combobox", { name: "Music direction" });
+    fireEvent.click(direction);
     expect(
-      within(direction)
+      within(screen.getByRole("listbox", { name: "Music direction" }))
         .getAllByRole("option")
         .map((option) => option.textContent),
     ).toEqual(["Automatic", "Manual"]);
     expect(screen.queryByRole("combobox", { name: "Music root" })).toBeNull();
     expect(screen.queryByRole("region", { name: "Effects" })).toBeNull();
 
-    fireEvent.change(direction, { target: { value: "override" } });
+    fireEvent.click(screen.getByRole("option", { name: "Manual" }));
     expect(getMusicSettings().controlMode).toBe("override");
     expect(screen.getByRole("combobox", { name: "Music root" })).toBeTruthy();
     expect(screen.queryByLabelText("Master seed")).toBeNull();
 
-    fireEvent.change(direction, { target: { value: "auto" } });
+    fireEvent.click(direction);
+    fireEvent.click(screen.getByRole("option", { name: "Automatic" }));
     expect(screen.queryByRole("combobox", { name: "Music root" })).toBeNull();
     expect(getMusicApplication().session.getState()).toBe(before);
   });
@@ -44,7 +46,8 @@ describe("sound desk", () => {
     setMusicControlMode("override");
     render(<SoundDesk />);
     const controller = getMusicApplication().session;
-    fireEvent.change(screen.getByRole("combobox", { name: "Music root" }), { target: { value: "road" } });
+    fireEvent.click(screen.getByRole("combobox", { name: "Music root" }));
+    fireEvent.click(screen.getByRole("option", { name: "The Open Road" }));
     expect(controller.getState().rootId).toBe("road");
     fireEvent.change(screen.getByRole("slider", { name: "Studio music tempo" }), { target: { value: "100" } });
     expect(controller.getState().bpm).toBe(100);
@@ -53,9 +56,9 @@ describe("sound desk", () => {
     fireEvent.change(screen.getByLabelText("Master seed"), { target: { value: "4253" } });
     expect(controller.getState().masterSeed).toBe(4253);
     const form = screen.getByRole("combobox", { name: "Music form lock" });
-    const option = within(form).getAllByRole("option")[1] as HTMLOptionElement;
-    fireEvent.change(form, { target: { value: option.value } });
-    expect(controller.getState().formOverride).toBe(option.value);
+    fireEvent.click(form);
+    fireEvent.click(screen.getByRole("option", { name: "Paired puncta" }));
+    expect(controller.getState().formOverride).toBe("paired-puncta");
   });
 
   test("keeps instrument controls in a closed disclosure", async () => {

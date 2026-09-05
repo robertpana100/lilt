@@ -36,12 +36,13 @@ export function MusicArrangementSections() {
             <Field label="Courses">
               <Select
                 aria-label="Music chord maximum courses"
-                value={session.chords.maxCourses}
-                onChange={(event) => controller.setChords({ maxCourses: event.currentTarget.value === "2" ? 2 : 3 })}
-              >
-                <option value={2}>2 · Dyads</option>
-                <option value={3}>3 · Triads</option>
-              </Select>
+                value={String(session.chords.maxCourses)}
+                onValueChange={(value) => controller.setChords({ maxCourses: value === "2" ? 2 : 3 })}
+                options={[
+                  { value: "2", label: "2 · Dyads" },
+                  { value: "3", label: "3 · Triads" },
+                ]}
+              />
             </Field>
             <RangeField
               label="Strum spread"
@@ -84,14 +85,13 @@ export function MusicArrangementSections() {
             <Field label="Courses">
               <Select
                 aria-label="Music rhythm lute maximum courses"
-                value={session.rhythmLute.maxCourses}
-                onChange={(event) =>
-                  controller.setRhythmLute({ maxCourses: event.currentTarget.value === "2" ? 2 : 3 })
-                }
-              >
-                <option value={2}>2 · Dyads</option>
-                <option value={3}>3 · Triads</option>
-              </Select>
+                value={String(session.rhythmLute.maxCourses)}
+                onValueChange={(value) => controller.setRhythmLute({ maxCourses: value === "2" ? 2 : 3 })}
+                options={[
+                  { value: "2", label: "2 · Dyads" },
+                  { value: "3", label: "3 · Triads" },
+                ]}
+              />
             </Field>
             <RangeField
               label="Strum spread"

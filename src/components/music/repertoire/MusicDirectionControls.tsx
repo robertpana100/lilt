@@ -8,14 +8,14 @@ export function MusicDirectionControls({ settings }: { settings: MusicSettings }
       <Select
         aria-label="Music direction"
         value={settings.controlMode}
-        onChange={(event) => {
-          const value = event.currentTarget.value;
+        onValueChange={(value) => {
           if (value === "auto" || value === "override") setMusicControlMode(value);
         }}
-      >
-        <option value="auto">Automatic</option>
-        <option value="override">Manual</option>
-      </Select>
+        options={[
+          { value: "auto", label: "Automatic" },
+          { value: "override", label: "Manual" },
+        ]}
+      />
     </Field>
   );
 }
